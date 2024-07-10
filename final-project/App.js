@@ -50,6 +50,13 @@ export default function App() {
           }}
           component={Home}
         />
+        {/* <Stack.Screen
+          name="EventScreen"
+          option={{
+            title: "Event",
+          }}
+          component={EventScreen}
+        /> */}
         {/* <Stack.Screen name="Events" component={EventScreen} />
         <Stack.Screen name="Notifications" component={NotificationScreen} /> */}
       </Stack.Navigator>

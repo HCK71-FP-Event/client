@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { FlatList, StatusBar, View, StyleSheet } from "react-native";
 import Card from "../components/Card";
+import Map from "../components/Map";
 
 export default function Home() {
   const [data, setData] = useState([]);
@@ -11,14 +12,17 @@ export default function Home() {
       .then((json) => setData(json));
   }, []);
   return (
-    <View style={styles.container}>
-      <StatusBar />
-      <FlatList
-        data={data}
-        renderItem={({ item }) => <Card data={item} />}
-        keyExtractor={(item) => item.id}
-      />
-    </View>
+    <>
+      <Map />
+      <View style={styles.container}>
+        <StatusBar />
+        <FlatList
+          data={data}
+          renderItem={({ item }) => <Card data={item} />}
+          keyExtractor={(item) => item.id}
+        />
+      </View>
+    </>
   );
 }
 
