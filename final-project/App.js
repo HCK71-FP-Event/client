@@ -1,78 +1,67 @@
-import {
-  FlatList,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
-import Card from "./app/components/Card";
-import { useEffect, useState } from "react";
+import { Image, StyleSheet } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
-
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import Home from "./app/screens/Home";
+import NotificationScreen from "./app/screens/NotificationScreen";
+import EventScreen from "./app/screens/EventScreen";
+
 const Stack = createNativeStackNavigator();
+const Tab = createBottomTabNavigator;
 
-function HomeScreen() {
+function MyTabs() {
   return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <Text>Home Screen</Text>
-    </View>
-  );
-}
-
-function DetailsScreen() {
-  return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <Text>Details Screen</Text>
-    </View>
+    <Tab.Navigator>
+      <Tab.Screen name="Home" component={Home} />
+      <Tab.Screen name="Notifications" component={NotificationScreen} />
+      <Tab.Screen name="Events" component={EventScreen} />
+    </Tab.Navigator>
   );
 }
 
 export default function App() {
-  const [data, setData] = useState([]);
-
-  useEffect(() => {
-    fetch("https://jsonplaceholder.typicode.com/posts")
-      .then((response) => response.json())
-      .then((json) => setData(json));
-  }, []);
-
   return (
-    // <ScrollView>
-    //   <View style={styles.container}>
-    //     {data.map((el, idx) => {
-    //       return <Card key={idx} data={el} />;
-    //     })}
-    //   </View>
-    // </ScrollView>
-
-    <View style={styles.container}>
-      <FlatList
-        data={data}
-        renderItem={({ item }) => <Card data={item} />}
-        keyExtractor={(item) => item.id}
-      />
-    </View>
-    // <NavigationContainer>
-    //   <Stack.Navigator>
-    //     <Stack.Screen name="Home" component={HomeScreen} />
-    //     <Stack.Screen name="Details" component={DetailsScreen} />
-    //   </Stack.Navigator>
-    // </NavigationContainer>
+    <NavigationContainer>
+      <Stack.Navigator
+        screenOptions={{
+          headerStyle: {
+            backgroundColor: "#fff",
+          },
+          headerTitleStyle: {
+            fontWeight: "semibold",
+          },
+          // headerTitle: () => {
+          //   return (
+          //     <Image
+          //       style={{ height: 50, width: 100 }}
+          //       source={{
+          //         uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGMunX7h3P-Y8aCpPC5ebk-aYzfAu4SK1WwQ&s",
+          //       }}
+          //     />
+          //   );
+          // },
+        }}
+        component={MyTabs}
+      >
+        <Stack.Screen
+          name="Home"
+          option={{
+            title: "Home",
+          }}
+          component={Home}
+        />
+        {/* <Stack.Screen name="Events" component={EventScreen} />
+        <Stack.Screen name="Notifications" component={NotificationScreen} /> */}
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
-    padding: 10,
+    justifyContent: "center",
+    alignItems: "center",
     gap: 10,
-
-    // flex: 1,
-    // justifyContent: "center",
-    // alignItems: "center",
-    // gap: 10,
   },
 });
