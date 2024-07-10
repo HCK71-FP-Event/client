@@ -1,6 +1,9 @@
+import { useNavigation } from "@react-navigation/native";
 import { Button, Image, Text, View } from "react-native";
 
 export default function Card({ data }) {
+  const navigation = useNavigation();
+
   return (
     <View
       style={{
@@ -32,7 +35,14 @@ export default function Card({ data }) {
           </Text>
           <Text style={{ fontSize: 11 }}>{data.body.substring(0, 50)}</Text>
         </View>
-        <Button title="Kill Him!!" />
+        <Button
+          onPress={() =>
+            navigation.navigate("Details", {
+              id: data.id,
+            })
+          }
+          title="Details"
+        />
       </View>
     </View>
   );
