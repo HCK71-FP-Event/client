@@ -65,11 +65,11 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     alignItems: "center",
     backgroundColor: "#f0f0f0",
-    paddingTop: 20,
+    justifyContent: 'center'
   },
   card: {
-    width: "90%",
-    height: "40%",
+    width: "100%",
+    height: "100%",
     borderRadius: 15,
     overflow: "hidden",
     backgroundColor: "#fff",
