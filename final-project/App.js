@@ -5,6 +5,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Home from "./app/screens/Home";
 import NotificationScreen from "./app/screens/NotificationScreen";
 import EventScreen from "./app/screens/EventScreen";
+import PaymentForm from "./app/screens/PaymentForm";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator;
@@ -12,6 +13,7 @@ const Tab = createBottomTabNavigator;
 function MyTabs() {
   return (
     <Tab.Navigator>
+      <Tab.Screen name="PaymentForm" component={PaymentForm} />
       <Tab.Screen name="Home" component={Home} />
       <Tab.Screen name="Notifications" component={NotificationScreen} />
       <Tab.Screen name="Events" component={EventScreen} />
@@ -44,12 +46,19 @@ export default function App() {
         component={MyTabs}
       >
         <Stack.Screen
+          name="Payment Form"
+          option={{
+            title: "Payment Form",
+          }}
+          component={PaymentForm}
+        />
+        {/* <Stack.Screen
           name="Home"
           option={{
             title: "Home",
           }}
           component={Home}
-        />
+        /> */}
         {/* <Stack.Screen
           name="EventScreen"
           option={{
