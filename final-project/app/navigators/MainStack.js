@@ -23,7 +23,7 @@ export default function MainStack() {
       {isLoggedIn ? (
         <>
           <Stack.Screen name="Main" component={BottomTabNavigator} />
-          <Stack.Screen name="Comments" component={Comments} />
+          {/* <Stack.Screen name="Comments" component={Comments} /> */}
         </>
       ) : (
         <Stack.Screen name="Auth" component={AuthStack} />

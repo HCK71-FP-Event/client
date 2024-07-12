@@ -23,17 +23,6 @@ const validationSchema = Yup.object().shape({
     .label("Password")
     .required("Please enter your password")
     .min(4, "Password must have at least 4 characters"),
-  fullname: Yup.string()
-    .label("Fullname")
-    .required("Please enter your full name"),
-  birthOfDate: Yup.string()
-    .label("BirtOfDate")
-    .required("Please enter your birth of date"),
-  phoneNumber: Yup.string()
-    .label("Phone Number")
-    .required("Please enter your phone number"),
-  address: Yup.string().label("Address").required("Please enter your address"),
-  avatar: Yup.string().label("Avatar").required("Please enter your avatar"),
 });
 
 export default function Register({ navigation }) {
@@ -45,7 +34,7 @@ export default function Register({ navigation }) {
       keyboardVerticalOffset={85}
     >
       <ScrollView contentContainerStyle={styles.container}>
-        <Heading h2 title="Register" />
+        <Heading h2 title="Login" />
         <View style={styles.form}>
           <Formik
             initialValues={{
@@ -106,87 +95,11 @@ export default function Register({ navigation }) {
                   errorValue={touched.password && errors.password}
                 />
 
-                <FormInput
-                  name="fullname"
-                  label="Full Name"
-                  value={values.fullname}
-                  onChangeText={handleChange("fullname")}
-                  onBlur={handleBlur("fullname")}
-                  placeholder="Enter Full Name"
-                  returnKeyType="done"
-                  autoCapitalize="none"
-                  iconName="person-sharp"
-                  iconColor="#533263"
-                />
-                <ErrorMessage
-                  errorValue={touched.fullname && errors.fullname}
-                />
-
-                <FormInput
-                  name="birthOfDate"
-                  label="Birth of Date"
-                  value={values.birthOfDate}
-                  onChangeText={handleChange("birthOfDate")}
-                  onBlur={handleBlur("birthOfDate")}
-                  placeholder="Enter Birth of Date"
-                  returnKeyType="done"
-                  autoCapitalize="none"
-                  iconName="calendar"
-                  iconColor="#533263"
-                />
-                <ErrorMessage
-                  errorValue={touched.birthOfDate && errors.birthOfDate}
-                />
-
-                <FormInput
-                  name="phoneNumber"
-                  label="Phone Number"
-                  value={values.phoneNumber}
-                  onChangeText={handleChange("phoneNumber")}
-                  onBlur={handleBlur("phoneNumber")}
-                  placeholder="Enter Phone Number"
-                  returnKeyType="done"
-                  autoCapitalize="none"
-                  iconName="call"
-                  iconColor="#533263"
-                />
-                <ErrorMessage
-                  errorValue={touched.phoneNumber && errors.phoneNumber}
-                />
-
-                <FormInput
-                  name="address"
-                  label="Address"
-                  value={values.address}
-                  onChangeText={handleChange("address")}
-                  onBlur={handleBlur("address")}
-                  placeholder="Enter Address"
-                  returnKeyType="done"
-                  autoCapitalize="none"
-                  iconName="location"
-                  iconColor="#533263"
-                />
-                <ErrorMessage errorValue={touched.address && errors.address} />
-
-                <FormInput
-                  name="avatar"
-                  label="Avatar"
-                  value={values.avatar}
-                  onChangeText={handleChange("avatar")}
-                  onBlur={handleBlur("avatar")}
-                  placeholder="Put your image URL"
-                  returnKeyType="done"
-                  autoCapitalize="none"
-                  iconName="image"
-                  iconColor="#533263"
-                />
-                <ErrorMessage errorValue={touched.avatar && errors.avatar} />
-
                 <FormButton
                   onPress={handleSubmit}
                   disabled={!isValid || isSubmitting}
                   buttonType="solid"
-                  title="SIGN UP"
+                  title="SIGN IN"
                   buttonColor="#533263"
                   loading={isSubmitting}
                 />
@@ -195,12 +108,12 @@ export default function Register({ navigation }) {
           </Formik>
         </View>
         <Text style={styles.Text}>
-          Already have an account?{" "}
+          Dont have an account?{" "}
           <Text
             style={styles.signUp}
             onPress={() => navigation.navigate("Login")}
           >
-            Sign In
+            Sign Up
           </Text>
         </Text>
         <StatusBar style="auto" />
