@@ -8,6 +8,7 @@ import Profile from "../screens/Profile";
 import DetailEventScreen from "../screens/DetailEventScreen";
 import EventScreen from "../screens/EventScreen";
 
+
 const Tab = createBottomTabNavigator();
 
 const screenOptions = {
@@ -27,6 +28,7 @@ const screenOptions = {
 
 export default function BottomTabNav() {
   return (
+
     <Tab.Navigator screenOptions={screenOptions}>
       <Tab.Screen
         name="Home"
