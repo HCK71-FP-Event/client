@@ -8,10 +8,11 @@ import {
   Image,
   Modal,
 } from "react-native";
-import React, { useState } from "react";
-import { MaterialIcons } from "@expo/vector-icons";
+import React, { useState, useEffect } from "react";
+import { Ionicons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import * as Permissions from "expo-permissions";
 
 const imageDataURL =
   "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSviRMCGgqQ4I_iNG11jPQgvSK6SoMKvevcxA&s";
@@ -32,6 +33,23 @@ export default function EditProfile({ navigation }) {
 
   const [selectedStartDate, setSelectedStartDate] = useState(new Date());
   const [startedDate, setStartedDate] = useState("12/12/2023");
+
+  useEffect(() => {
+    (async () => {
+      const { status: cameraStatus } = await Permissions.askAsync(
+        Permissions.CAMERA
+      );
+      const { status: mediaLibraryStatus } = await Permissions.askAsync(
+        Permissions.MEDIA_LIBRARY
+      );
+
+      if (cameraStatus !== "granted" || mediaLibraryStatus !== "granted") {
+        alert(
+          "Sorry, we need camera and media library permissions to make this work!"
+        );
+      }
+    })();
+  }, []);
 
   const handleChangeStartDate = (event, date) => {
     const selectedDate = date || selectedStartDate;
@@ -58,6 +76,12 @@ export default function EditProfile({ navigation }) {
   };
 
   const handleTakePhoto = async () => {
+    const { status } = await ImagePicker.requestCameraPermissionsAsync();
+    if (status !== "granted") {
+      alert("Sorry, we need camera permissions to make this work!");
+      return;
+    }
+
     let result = await ImagePicker.launchCameraAsync({
       allowsEditing: true,
       aspect: [4, 3],
@@ -132,7 +156,7 @@ export default function EditProfile({ navigation }) {
             left: 0,
           }}
         >
-          <MaterialIcons name="keyboard-arrow-left" size={24} color={"#000"} />
+          <Ionicons name="arrow-back" size={24} color={"#000"} />
         </TouchableOpacity>
 
         <Text
@@ -174,7 +198,7 @@ export default function EditProfile({ navigation }) {
                 padding: 2,
               }}
             >
-              <MaterialIcons name="photo-camera" size={32} color={"#fff"} />
+              <Ionicons name="camera" size={32} color={"#fff"} />
             </View>
           </TouchableOpacity>
         </View>
