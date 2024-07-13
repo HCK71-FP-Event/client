@@ -1,9 +1,9 @@
 import React, { useContext } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import AuthStack from "./AuthStack.js";
-import BottomTabNavigator from "./BottomTabNavigator";
 import { ActivityIndicator, View } from "react-native";
 import { AuthContext } from "../context/AuthContext.js";
+import BottomTabNav from "./BottomTabNavigator.js";
 
 const Stack = createStackNavigator();
 
@@ -22,7 +22,7 @@ export default function MainStack() {
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       {isLoggedIn ? (
         <>
-          <Stack.Screen name="Main" component={BottomTabNavigator} />
+          <Stack.Screen name="Main" component={BottomTabNav} />
           {/* <Stack.Screen name="Comments" component={Comments} /> */}
         </>
       ) : (
