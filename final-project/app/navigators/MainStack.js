@@ -21,10 +21,12 @@ export default function MainStack() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       {isLoggedIn ? (
+
         <>
           <Stack.Screen name="Main" component={BottomTabNav} />
           {/* <Stack.Screen name="Comments" component={Comments} /> */}
         </>
+
       ) : (
         <Stack.Screen name="Auth" component={AuthStack} />
       )}

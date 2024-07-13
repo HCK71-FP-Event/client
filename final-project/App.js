@@ -85,15 +85,12 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import MainStack from "./app/navigators/MainStack";
-import { ApolloProvider } from "@apollo/client";
-import client from "./app/config/apolloClient";
 import AuthProvider from "./app/context/AuthContext";
 
 const Stack = createStackNavigator();
 
 export default function App() {
   return (
-    <ApolloProvider client={client}>
       <AuthProvider>
         <NavigationContainer>
           <Stack.Navigator screenOptions={{ headerShown: false }}>
@@ -101,6 +98,5 @@ export default function App() {
           </Stack.Navigator>
         </NavigationContainer>
       </AuthProvider>
-    </ApolloProvider>
   );
 }
