@@ -1,127 +1,112 @@
-// import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-// import Home from "../screens/Home.js";
-// import AddPost from "../screens/AddPost.js";
-// import Profile from "../screens/Profile.js";
-// import { Ionicons } from "@expo/vector-icons";
-// import { TouchableOpacity, Alert } from "react-native";
-// import AsyncStorage from "@react-native-async-storage/async-storage";
-// import { useContext } from "react";
-// import { AuthContext } from "../context/AuthContext.js";
-// import XHeader from "../components/xheader.js";
-// import client from "../config/apolloClient.js";
-
-// const Tab = createBottomTabNavigator();
-
-// export default function BottomTabNavigator({ navigation }) {
-//   const { setIsLoggedIn } = useContext(AuthContext);
-
-//   async function handleLogout() {
-//     try {
-//       await client.resetStore();
-
-//       await AsyncStorage.removeItem("access_token");
-
-//       setIsLoggedIn(false);
-//     } catch (error) {
-//       Alert.alert("Error", error.message);
-//     }
-//   }
-
-//   return (
-//     <Tab.Navigator
-//       screenOptions={({ route }) => ({
-//         headerShown: true,
-//         headerTitle: () => <XHeader />,
-//         headerRight: () => (
-//           <TouchableOpacity onPress={handleLogout} style={{ marginRight: 10 }}>
-//             <Ionicons name="log-out-outline" size={24} color="#0077b5" />
-//           </TouchableOpacity>
-//         ),
-//         tabBarActiveTintColor: "#0077b5",
-//         tabBarInactiveTintColor: "#B1BEC4",
-//         tabBarIcon: ({ color, size }) => {
-//           let iconName;
-
-//           switch (route.name) {
-//             case "Home":
-//               iconName = "home";
-//               break;
-//             case "Post":
-//               iconName = "add-circle";
-//               break;
-//             case "Profile":
-//               iconName = "person";
-//               break;
-//           }
-
-//           return <Ionicons name={iconName} size={size} color={color} />;
-//         },
-//       })}
-//     >
-//       <Tab.Screen name="Home" component={Home} />
-//       <Tab.Screen name="Post" component={AddPost} />
-//       <Tab.Screen name="Profile" component={Profile} />
-//     </Tab.Navigator>
-//   );
-// }
-
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import Home from "../screens/Home.js";
+import { View, Platform } from "react-native";
+import React from "react";
 import { Ionicons } from "@expo/vector-icons";
-import { TouchableOpacity, Alert } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useContext } from "react";
-import { AuthContext } from "../context/AuthContext.js";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import Home from "../screens/Home";
+import Tickets from "../screens/Tickets";
+import Profile from "../screens/Profile";
+import DetailEventScreen from "../screens/DetailEventScreen";
+import EventScreen from "../screens/EventScreen";
 
 const Tab = createBottomTabNavigator();
 
-export default function BottomTabNavigator({ navigation }) {
-  const { setIsLoggedIn } = useContext(AuthContext);
+const screenOptions = {
+  tabBarShowLabel: false,
+  headerShown: false,
+  tabBarHideOnKeyboard: true,
+  tabBarStyle: {
+    position: "absolute",
+    bottom: 0,
+    right: 0,
+    left: 0,
+    elevation: 0,
+    height: 60,
+    backgroundColor: "#533263",
+  },
+};
 
-  async function handleLogout() {
-    try {
-      await client.resetStore();
-
-      await AsyncStorage.removeItem("access_token");
-
-      setIsLoggedIn(false);
-    } catch (error) {
-      Alert.alert("Error", error.message);
-    }
-  }
-
+export default function BottomTabNav() {
   return (
-    <Tab.Navigator
-      screenOptions={({ route }) => ({
-        headerShown: true,
-        // headerTitle: () => <XHeader />,
-        headerRight: () => (
-          <TouchableOpacity onPress={handleLogout} style={{ marginRight: 10 }}>
-            <Ionicons name="log-out-outline" size={24} color="#0077b5" />
-          </TouchableOpacity>
-        ),
-        tabBarActiveTintColor: "#0077b5",
-        tabBarInactiveTintColor: "#B1BEC4",
-        tabBarIcon: ({ color, size }) => {
-          let iconName;
+    <Tab.Navigator screenOptions={screenOptions}>
+      <Tab.Screen
+        name="Home"
+        component={Home}
+        options={{
+          tabBarIcon: ({ focused }) => (
+            <Ionicons
+              name="home"
+              size={24}
+              color={focused ? "#F0FFFF" : "#000000"}
+            />
+          ),
+        }}
+      />
 
-          switch (route.name) {
-            case "Home":
-              iconName = "home";
-              break;
-            case "Post":
-              iconName = "add-circle";
-              break;
-            case "Profile":
-              iconName = "person";
-              break;
-          }
+      <Tab.Screen
+        name="Tickets"
+        component={Tickets}
+        options={{
+          tabBarIcon: ({ focused }) => (
+            <Ionicons
+              name="ticket"
+              size={24}
+              color={focused ? "#F0FFFF" : "#000000"}
+            />
+          ),
+        }}
+      />
 
-          return <Ionicons name={iconName} size={size} color={color} />;
-        },
-      })}
-    >
-      <Tab.Screen name="Home" component={Home} />
+      <Tab.Screen
+        name="EventScreen"
+        component={EventScreen}
+        options={{
+          tabBarIcon: ({ focused }) => (
+            <View
+              style={{
+                alignItems: "center",
+                justifyContent: "center",
+                backgroundColor: "#533263",
+                height: Platform.OS === "ios" ? 50 : 60,
+                width: Platform.OS === "ios" ? 50 : 60,
+                top: Platform.OS === "ios" ? -10 : -20,
+                borderRadius: Platform.OS === "ios" ? 25 : 30,
+                borderWidth: 2,
+                borderColor: "#fff",
+              }}
+            >
+              <Ionicons name="location" size={24} color={"#fff"} />
+            </View>
+          ),
+        }}
+      />
+
+      <Tab.Screen
+        name="Events"
+        component={DetailEventScreen}
+        options={{
+          tabBarIcon: ({ focused }) => (
+            <Ionicons
+              name="calendar-number-sharp"
+              size={24}
+              color={focused ? "#F0FFFF" : "#000000"}
+            />
+          ),
+        }}
+      />
+
+      <Tab.Screen
+        name="Profile"
+        component={Profile}
+        options={{
+          tabBarIcon: ({ focused }) => (
+            <Ionicons
+              name="person"
+              size={24}
+              color={focused ? "#F0FFFF" : "#000000"}
+            />
+          ),
+        }}
+      />
     </Tab.Navigator>
   );
 }
