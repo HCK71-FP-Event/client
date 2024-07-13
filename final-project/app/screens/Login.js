@@ -61,7 +61,7 @@ export default function Login({ navigation }) {
       keyboardVerticalOffset={85}
     >
       <ScrollView contentContainerStyle={styles.container}>
-        <Heading h2 title="Login" />
+        <Heading h2 title="Sign in" />
         <View style={styles.form}>
           <Formik
             initialValues={{ email: "", password: "" }}
