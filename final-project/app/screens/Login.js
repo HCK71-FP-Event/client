@@ -1,4 +1,3 @@
-import { StatusBar } from "expo-status-bar";
 import React from "react";
 import {
   StyleSheet,
@@ -13,6 +12,10 @@ import FormInput from "../components/FormInput";
 import ErrorMessage from "../components/ErrorMessage";
 import Heading from "../components/Heading";
 import FormButton from "../components/FormButton";
+import { useContext, useState } from "react";
+import Axios from "../utils/axios";
+import { AuthContext } from "../context/AuthContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const validationSchema = Yup.object().shape({
   email: Yup.string()
@@ -25,7 +28,31 @@ const validationSchema = Yup.object().shape({
     .min(4, "Password must have at least 4 characters"),
 });
 
-export default function Register({ navigation }) {
+export default function Login({ navigation }) {
+  const { setIsLoggedIn } = useContext(AuthContext);
+
+  const handleLogin = async (values, actions) => {
+    try {
+      let response = await Axios({
+        method: "POST",
+        url: "/login",
+        data: {
+          email: values.email,
+          password: values.password,
+        },
+      });
+      await AsyncStorage.setItem("access_token", response.data.access_token);
+      setIsLoggedIn(true);
+      navigation.navigate("Main");
+    } catch (error) {
+      console.error(error.message);
+      actions.setFieldError(
+        "general",
+        error.response?.data?.message || error.message
+      );
+    }
+  };
+
   return (
     <KeyboardAvoidingView
       style={styles.avoidKeyboard}
@@ -37,19 +64,8 @@ export default function Register({ navigation }) {
         <Heading h2 title="Sign in" />
         <View style={styles.form}>
           <Formik
-            initialValues={{
-              fullname: "",
-              email: "",
-              password: "",
-              birthOfDate: "",
-              phoneNumber: "",
-              address: "",
-              avatar: "",
-            }}
-            onSubmit={(values) => {
-              // Use API to handle validated data
-              alert(JSON.stringify(values));
-            }}
+            initialValues={{ email: "", password: "" }}
+            onSubmit={(values, actions) => handleLogin(values, actions)}
             validationSchema={validationSchema}
           >
             {({
@@ -95,6 +111,8 @@ export default function Register({ navigation }) {
                   errorValue={touched.password && errors.password}
                 />
 
+                <ErrorMessage errorValue={errors.general} />
+
                 <FormButton
                   onPress={handleSubmit}
                   disabled={!isValid || isSubmitting}
@@ -108,15 +126,14 @@ export default function Register({ navigation }) {
           </Formik>
         </View>
         <Text style={styles.Text}>
-          Dont have an account?{" "}
+          Don't have an account?{" "}
           <Text
             style={styles.signUp}
-            onPress={() => navigation.navigate("Login")}
+            onPress={() => navigation.navigate("Register")}
           >
             Sign Up
           </Text>
         </Text>
-        <StatusBar style="auto" />
       </ScrollView>
     </KeyboardAvoidingView>
   );
