@@ -2,10 +2,13 @@ import React, { useEffect, useState } from "react";
 import MapView, { Marker } from "react-native-maps";
 import * as Location from "expo-location";
 import { StyleSheet, View, Text, ActivityIndicator } from "react-native";
+import Axios from "../utils/axios";
 
 export default function Map() {
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
+  const [events, setEvents] = useState([]);
+  const radius = 2000; // You can change the radius as needed
 
   useEffect(() => {
     (async () => {
@@ -17,15 +20,31 @@ export default function Map() {
 
       let location = await Location.getCurrentPositionAsync({});
       setLocation(location);
+
+      fetchEvents(location.coords.latitude, location.coords.longitude, radius);
     })();
   }, []);
 
-  let text = "Waiting..";
-  if (errorMsg) {
-    text = errorMsg;
-  } else if (location) {
-    text = JSON.stringify(location);
-  }
+  const fetchEvents = async (latitude, longitude, radius) => {
+    try {
+      const response = await Axios.get("/event", {
+        params: {
+          lat: latitude,
+          long: longitude,
+          distance: radius,
+        },
+      });
+      console.log("Response data:", response.data);
+      setEvents(response.data);
+    } catch (error) {
+      console.error("Error fetching events:", error);
+      if (error.response && error.response.status === 401) {
+        setErrorMsg("Unauthorized: Please check your login credentials.");
+      } else {
+        setErrorMsg("Error fetching events: " + error.message);
+      }
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -47,11 +66,21 @@ export default function Map() {
               }}
               title="You are here"
             />
+            {events.map((event) => (
+              <Marker
+                key={event.id}
+                coordinate={{
+                  latitude: event.location.coordinates[1], // Assuming event.location is in GeoJSON format
+                  longitude: event.location.coordinates[0],
+                }}
+                title={event.name}
+              />
+            ))}
           </MapView>
         ) : (
           <View style={styles.loadingContainer}>
             <ActivityIndicator size="large" color="#0000ff" />
-            <Text>{text}</Text>
+            <Text>{errorMsg || "Waiting.."}</Text>
           </View>
         )}
       </View>
@@ -62,10 +91,9 @@ export default function Map() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "flex-start",
+    justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#f0f0f0",
-    justifyContent: 'center'
   },
   card: {
     width: "100%",

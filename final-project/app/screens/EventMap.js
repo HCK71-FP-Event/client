@@ -1,10 +1,6 @@
-import { View, Text } from "react-native";
 import React from "react";
+import Map from "../components/Map";
 
 export default function EventMap() {
-  return (
-    <View>
-      <Text>Event Map</Text>
-    </View>
-  );
+  return <Map />;
 }
