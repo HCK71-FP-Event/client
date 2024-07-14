@@ -13,7 +13,6 @@ export default function Home() {
   }, []);
   return (
     <>
-      <Map />
       <View style={styles.container}>
         <StatusBar />
         <FlatList

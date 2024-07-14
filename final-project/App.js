@@ -91,12 +91,12 @@ const Stack = createStackNavigator();
 
 export default function App() {
   return (
-      <AuthProvider>
-        <NavigationContainer>
-          <Stack.Navigator screenOptions={{ headerShown: false }}>
-            <Stack.Screen name="MainStack" component={MainStack} />
-          </Stack.Navigator>
-        </NavigationContainer>
-      </AuthProvider>
+    <AuthProvider>
+      <NavigationContainer>
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="MainStack" component={MainStack} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </AuthProvider>
   );
 }

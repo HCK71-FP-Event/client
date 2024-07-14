@@ -13,6 +13,7 @@ import FormInput from "../components/FormInput";
 import ErrorMessage from "../components/ErrorMessage";
 import Heading from "../components/Heading";
 import FormButton from "../components/FormButton";
+import Axios from "../utils/axios"; // Ensure this is the correct path to your Axios instance
 
 const validationSchema = Yup.object().shape({
   email: Yup.string()
@@ -27,7 +28,7 @@ const validationSchema = Yup.object().shape({
     .label("Fullname")
     .required("Please enter your full name"),
   birthOfDate: Yup.string()
-    .label("BirtOfDate")
+    .label("BirthOfDate")
     .required("Please enter your birth of date"),
   phoneNumber: Yup.string()
     .label("Phone Number")
@@ -37,6 +38,30 @@ const validationSchema = Yup.object().shape({
 });
 
 export default function Register({ navigation }) {
+  const handleSubmit = async (values, { setSubmitting }) => {
+    try {
+      const response = await Axios.post("/register", {
+        email: values.email,
+        password: values.password,
+        fullName: values.fullname,
+        birthOfDate: values.birthOfDate,
+        phoneNumber: values.phoneNumber,
+        address: values.address,
+        avatar: values.avatar,
+      });
+
+      alert(
+        "Registration Successful With: " +
+          JSON.stringify(response.data.message.email)
+      );
+      navigation.navigate("Login"); // Navigate to login after successful registration
+    } catch (error) {
+      alert("Registration Failed: " + error.response.data.message);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   return (
     <KeyboardAvoidingView
       style={styles.avoidKeyboard}
@@ -57,10 +82,7 @@ export default function Register({ navigation }) {
               address: "",
               avatar: "",
             }}
-            onSubmit={(values) => {
-              // Use API to handle validated data
-              alert(JSON.stringify(values));
-            }}
+            onSubmit={handleSubmit}
             validationSchema={validationSchema}
           >
             {({
@@ -216,10 +238,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     paddingVertical: 20,
-  },
-  heading: {
-    color: "#533263",
-    fontWeight: "bold",
   },
   form: {
     width: "90%",
