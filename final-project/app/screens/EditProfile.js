@@ -122,7 +122,8 @@ export default function EditProfile({ navigation }) {
           <DateTimePicker
             mode="date"
             value={selectedStartDate}
-            minimumDate={new Date(startDate)}
+            minimumDate={new Date("1900-01-01")}
+            maximumDate={new Date()}
             onChange={handleChangeStartDate}
           />
 
