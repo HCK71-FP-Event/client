@@ -8,7 +8,6 @@ export default function Map() {
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
   const [events, setEvents] = useState([]);
-  const radius = 2000;
   const pinColor = "#00BFFF";
 
   useEffect(() => {
@@ -22,15 +21,15 @@ export default function Map() {
       let location = await Location.getCurrentPositionAsync({});
       setLocation(location);
 
-      fetchEvents(location.coords.latitude, location.coords.longitude, radius);
+      fetchEvents(location.coords.latitude, location.coords.longitude);
     })();
   }, []);
 
-  const fetchEvents = async (latitude, longitude, radius) => {
+  const fetchEvents = async (latitude, longitude) => {
     try {
-      console.log(latitude, longitude, radius);
-      const response = await Axios.get(`/event?long=${longitude}&lat=${latitude}`);
-      console.log("Response data:", response);
+      const response = await Axios.get(
+        `/event?long=${longitude}&lat=${latitude}`
+      );
       setEvents(response.data);
     } catch (error) {
       console.error("Error fetching events:", error);
@@ -41,7 +40,7 @@ export default function Map() {
       }
     }
   };
-
+  console.log(events);
   return (
     <>
       <View style={styles.container}>
@@ -52,8 +51,8 @@ export default function Map() {
               initialRegion={{
                 latitude: location.coords.latitude,
                 longitude: location.coords.longitude,
-                latitudeDelta: 0.0922,
-                longitudeDelta: 0.0421,
+                latitudeDelta: 0.01,
+                longitudeDelta: 0.01,
               }}
             >
               <Marker
@@ -67,7 +66,7 @@ export default function Map() {
                 <Marker
                   key={event.id}
                   coordinate={{
-                    latitude: event.location.coordinates[1], // Assuming event.location is in GeoJSON format
+                    latitude: event.location.coordinates[1],
                     longitude: event.location.coordinates[0],
                   }}
                   title={event.name}
@@ -82,9 +81,6 @@ export default function Map() {
             </View>
           )}
         </View>
-      </View>
-      <View style={{ backgroundColor: "cyan", flex: 1 }}>
-        <Text>INI LIST EVENT TERDEKAT</Text>
       </View>
     </>
   );

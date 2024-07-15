@@ -3,7 +3,6 @@ import { Button, Image, Text, View } from "react-native";
 
 export default function Card({ data }) {
   const navigation = useNavigation();
-
   return (
     <View
       style={{
@@ -20,7 +19,7 @@ export default function Card({ data }) {
       <Image
         style={{ width: 100, height: "100%", borderRadius: 8 }}
         source={{
-          uri: `https://picsum.photos/200/300?random=${data.id}`,
+          uri: data.imageUrl,
         }}
       />
       <View
@@ -30,10 +29,8 @@ export default function Card({ data }) {
         }}
       >
         <View>
-          <Text style={{ fontSize: 20, fontWeight: "bold" }}>
-            {data.title.substring(0, 20)}
-          </Text>
-          <Text style={{ fontSize: 11 }}>{data.body.substring(0, 50)}</Text>
+          <Text style={{ fontSize: 20, fontWeight: "bold" }}>{data.name}</Text>
+          <Text style={{ fontSize: 11 }}>{`${data.eventDate}`}</Text>
         </View>
         <Button
           onPress={() =>
