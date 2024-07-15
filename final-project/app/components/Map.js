@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import MapView, { Marker } from "react-native-maps";
 import * as Location from "expo-location";
-import { StyleSheet, View, Text, ActivityIndicator } from "react-native";
+import { StyleSheet, View, Text, ActivityIndicator, Pressable } from "react-native";
 import Axios from "../utils/axios";
 
 export default function Map() {
