@@ -1,11 +1,17 @@
-import { View, Platform, TouchableOpacity, Alert, StyleSheet } from "react-native";
+import {
+  View,
+  Platform,
+  TouchableOpacity,
+  Alert,
+  StyleSheet,
+} from "react-native";
 import React, { useContext } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Home from "../screens/Home";
 import Tickets from "../screens/Tickets";
 import Profile from "../screens/Profile";
-import DetailEventScreen from "../screens/DetailEventScreen";
+import Event from "../screens/Event";
 import Map from "../components/Map";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AuthContext } from "../context/AuthContext";
@@ -93,7 +99,7 @@ export default function BottomTabNav() {
         />
         <Tab.Screen
           name="Events"
-          component={DetailEventScreen}
+          component={Event}
           options={{
             tabBarIcon: ({ focused }) => (
               <Ionicons
@@ -118,10 +124,7 @@ export default function BottomTabNav() {
           }}
         />
       </Tab.Navigator>
-      <TouchableOpacity
-        style={styles.logoutButton}
-        onPress={handleLogout}
-      >
+      <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
         <Ionicons name="log-out" size={24} color={"#fff"} />
       </TouchableOpacity>
     </View>

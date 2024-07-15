@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { MaterialIcons } from "@expo/vector-icons";
-import DetailEvent from "../components/DetailEventCard";
+import EventCard from "../components/EventCard";
 
 const Event = ({ navigation }) => {
   const [data, setData] = useState([]);
@@ -64,7 +64,7 @@ const Event = ({ navigation }) => {
 
       <FlatList
         data={data}
-        renderItem={({ item }) => <DetailEvent event={item} />}
+        renderItem={({ item }) => <EventCard event={item} />}
         keyExtractor={(item) => item.id.toString()}
         horizontal
         pagingEnabled
