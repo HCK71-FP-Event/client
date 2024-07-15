@@ -8,7 +8,8 @@ export default function Map() {
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
   const [events, setEvents] = useState([]);
-  const radius = 2000; // You can change the radius as needed
+  const radius = 2000;
+  const pinColor = "#00BFFF";
 
   useEffect(() => {
     (async () => {
@@ -27,14 +28,11 @@ export default function Map() {
 
   const fetchEvents = async (latitude, longitude, radius) => {
     try {
-      const response = await Axios.get("/event", {
-        params: {
-          lat: latitude,
-          long: longitude,
-          distance: radius,
-        },
-      });
-      console.log("Response data:", response.data);
+      console.log(latitude, longitude, radius);
+      const response = await Axios.get(
+        `/event?long=${longitude}&lat=${latitude}`
+      );
+      console.log("Response data:", response);
       setEvents(response.data);
     } catch (error) {
       console.error("Error fetching events:", error);
@@ -74,6 +72,7 @@ export default function Map() {
                   longitude: event.location.coordinates[0],
                 }}
                 title={event.name}
+                pinColor={pinColor}
               />
             ))}
           </MapView>
