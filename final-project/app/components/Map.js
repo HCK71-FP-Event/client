@@ -29,9 +29,7 @@ export default function Map() {
   const fetchEvents = async (latitude, longitude, radius) => {
     try {
       console.log(latitude, longitude, radius);
-      const response = await Axios.get(
-        `/event?long=${longitude}&lat=${latitude}`
-      );
+      const response = await Axios.get(`/event?long=${longitude}&lat=${latitude}`);
       console.log("Response data:", response);
       setEvents(response.data);
     } catch (error) {
@@ -45,54 +43,59 @@ export default function Map() {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.card}>
-        {location ? (
-          <MapView
-            style={styles.map}
-            initialRegion={{
-              latitude: location.coords.latitude,
-              longitude: location.coords.longitude,
-              latitudeDelta: 0.0922,
-              longitudeDelta: 0.0421,
-            }}
-          >
-            <Marker
-              coordinate={{
+    <>
+      <View style={styles.container}>
+        <View style={styles.card}>
+          {location ? (
+            <MapView
+              style={styles.map}
+              initialRegion={{
                 latitude: location.coords.latitude,
                 longitude: location.coords.longitude,
+                latitudeDelta: 0.0922,
+                longitudeDelta: 0.0421,
               }}
-              title="You are here"
-            />
-            {events.map((event) => (
+            >
               <Marker
-                key={event.id}
                 coordinate={{
-                  latitude: event.location.coordinates[1], // Assuming event.location is in GeoJSON format
-                  longitude: event.location.coordinates[0],
+                  latitude: location.coords.latitude,
+                  longitude: location.coords.longitude,
                 }}
-                title={event.name}
-                pinColor={pinColor}
+                title="You are here"
               />
-            ))}
-          </MapView>
-        ) : (
-          <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" color="#0000ff" />
-            <Text>{errorMsg || "Waiting.."}</Text>
-          </View>
-        )}
+              {events.map((event) => (
+                <Marker
+                  key={event.id}
+                  coordinate={{
+                    latitude: event.location.coordinates[1], // Assuming event.location is in GeoJSON format
+                    longitude: event.location.coordinates[0],
+                  }}
+                  title={event.name}
+                  pinColor={pinColor}
+                />
+              ))}
+            </MapView>
+          ) : (
+            <View style={styles.loadingContainer}>
+              <ActivityIndicator size="large" color="#0000ff" />
+              <Text>{errorMsg || "Waiting.."}</Text>
+            </View>
+          )}
+        </View>
       </View>
-    </View>
+      <View style={{ backgroundColor: "cyan", flex: 1 }}>
+        <Text>INI LIST EVENT TERDEKAT</Text>
+      </View>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#f0f0f0",
+    // justifyContent: "center",
+    // alignItems: "center",
+    backgroundColor: "#fafafa",
   },
   card: {
     width: "100%",
