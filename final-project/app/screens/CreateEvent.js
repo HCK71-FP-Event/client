@@ -1,5 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, TextInput, Button, StyleSheet, ScrollView, SafeAreaView, TouchableOpacity, Platform } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  Button,
+  StyleSheet,
+  ScrollView,
+  SafeAreaView,
+  TouchableOpacity,
+  Platform,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Picker } from "@react-native-picker/picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -93,37 +103,86 @@ const CreateEvent = ({ navigation }) => {
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollViewContainer}>
         <Text style={styles.label}>Nama Event:</Text>
-        <TextInput style={styles.input} value={eventName} onChangeText={setEventName} placeholder="Nama Event" />
+        <TextInput
+          style={styles.input}
+          value={eventName}
+          onChangeText={setEventName}
+          placeholder="Nama Event"
+        />
 
         <Text style={styles.label}>URL Gambar:</Text>
-        <TextInput style={styles.input} value={imageUrl} onChangeText={setImageUrl} placeholder="URL Gambar" />
+        <TextInput
+          style={styles.input}
+          value={imageUrl}
+          onChangeText={setImageUrl}
+          placeholder="URL Gambar"
+        />
 
         <Text style={styles.label}>Longitude:</Text>
-        <TextInput style={styles.input} value={longitude} onChangeText={setLongitude} keyboardType="numeric" placeholder="Longitude" />
+        <TextInput
+          style={styles.input}
+          value={longitude}
+          onChangeText={setLongitude}
+          keyboardType="numeric"
+          placeholder="Longitude"
+        />
 
         <Text style={styles.label}>Latitude:</Text>
-        <TextInput style={styles.input} value={latitude} onChangeText={setLatitude} keyboardType="numeric" placeholder="Latitude" />
+        <TextInput
+          style={styles.input}
+          value={latitude}
+          onChangeText={setLatitude}
+          keyboardType="numeric"
+          placeholder="Latitude"
+        />
 
         <Text style={styles.label}>Quantity:</Text>
-        <TextInput style={styles.input} value={quantity} onChangeText={setQuantity} keyboardType="numeric" placeholder="Quantity" />
+        <TextInput
+          style={styles.input}
+          value={quantity}
+          onChangeText={setQuantity}
+          keyboardType="numeric"
+          placeholder="Quantity"
+        />
 
         <Text style={styles.label}>Kategori:</Text>
-        <Picker selectedValue={category} style={styles.picker} onValueChange={(itemValue) => setCategory(itemValue)}>
-          {categories.map((el) => (
-            <Picker.Item label={el.name} value={el.id} />
+        <Picker
+          selectedValue={category}
+          style={styles.picker}
+          onValueChange={(itemValue) => setCategory(itemValue)}
+        >
+          {categories.map((el, idx) => (
+            <Picker.Item label={el.name} value={el.id} key={idx} />
           ))}
         </Picker>
 
         <Text style={styles.label}>Tanggal Event:</Text>
         <View>
-          <TouchableOpacity onPress={() => setShowDatePicker(true)} style={styles.datePickerButton}>
+          <TouchableOpacity
+            onPress={() => setShowDatePicker(true)}
+            style={styles.datePickerButton}
+          >
             <Text>{eventDate.toDateString()}</Text>
           </TouchableOpacity>
-          {showDatePicker && <DateTimePicker value={eventDate} mode="date" display="default" onChange={handleDateChange} minimumDate={new Date()} />}
+          {showDatePicker && (
+            <DateTimePicker
+              value={eventDate}
+              mode="date"
+              display="default"
+              onChange={handleDateChange}
+              minimumDate={new Date()}
+            />
+          )}
         </View>
 
         <Text style={styles.label}>Deskripsi:</Text>
-        <TextInput style={[styles.input, { height: 100 }]} value={description} onChangeText={setDescription} multiline placeholder="Deskripsi Event" />
+        <TextInput
+          style={[styles.input, { height: 100 }]}
+          value={description}
+          onChangeText={setDescription}
+          multiline
+          placeholder="Deskripsi Event"
+        />
 
         <Button title="Submit" onPress={handleSubmit} />
       </ScrollView>

@@ -11,15 +11,12 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
 import Axios from "../utils/axios";
 
-export default function PaymentForm({ route }) {
+export default function PaymentForm({ route, navigation }) {
   const { event, user } = route.params;
   const [ticketQuantity, setTicketQuantity] = useState("1"); // Set default to "1"
   const [totalPrice, setTotalPrice] = useState(event.price);
-
-  const navigation = useNavigation();
 
   useEffect(() => {
     calculateTotalPrice();
@@ -35,26 +32,32 @@ export default function PaymentForm({ route }) {
 
   const handleSubmit = async () => {
     try {
-      const response = await Axios.post(
-        `/payment/midtrans/initiate/${event.id}`,
-        {
-          quantity: ticketQuantity,
-        }
-      );
-      const { token, redirect_url } = response.data;
-      
-      Linking.openURL(redirect_url);
-      navigation.navigate("Home");
+      const endpoint = event.isFree
+        ? `/payment/free-event/${event.id}`
+        : `/payment/midtrans/initiate/${event.id}`;
+
+      const response = await Axios.post(endpoint, {
+        quantity: ticketQuantity,
+      });
+
+      if (event.isFree) {
+        Alert.alert("Success", "Your free event ticket has been booked.");
+        navigation.navigate("Home");
+      } else {
+        const { redirect_url } = response.data;
+        Linking.openURL(redirect_url);
+        navigation.navigate("Home");
+      }
     } catch (error) {
       Alert.alert("Error", error.message);
     }
   };
 
   const formatToIDR = (amount) => {
-    return amount.toLocaleString('id-ID', {
-      style: 'currency',
-      currency: 'IDR',
-      minimumFractionDigits: 0
+    return amount.toLocaleString("id-ID", {
+      style: "currency",
+      currency: "IDR",
+      minimumFractionDigits: 0,
     });
   };
 
@@ -82,11 +85,7 @@ export default function PaymentForm({ route }) {
           />
 
           <Text style={styles.label}>Nama Event:</Text>
-          <TextInput
-            style={styles.input}
-            value={event.name}
-            editable={false}
-          />
+          <TextInput style={styles.input} value={event.name} editable={false} />
 
           <Text style={styles.label}>Tanggal dan Waktu Event:</Text>
           <TextInput
