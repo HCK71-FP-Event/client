@@ -14,6 +14,7 @@ import MapView, { Marker } from "react-native-maps";
 const Event = ({ route }) => {
   const { id } = route.params;
   const [event, setEvent] = useState(null);
+  const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [mapVisible, setMapVisible] = useState(false);
@@ -25,6 +26,7 @@ const Event = ({ route }) => {
   const fetchEventDetail = async () => {
     try {
       const response = await Axios.get(`/allEvent/${id}`);
+      setUser(response.data.user);
       setEvent(response.data.eventById);
     } catch (err) {
       console.error(err);
@@ -66,6 +68,7 @@ const Event = ({ route }) => {
     <View style={styles.container}>
       <EventCard
         event={event}
+        user={user}
         style={styles.eventCard}
         onToggleMap={handleToggleMap}
       />
