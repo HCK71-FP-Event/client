@@ -16,6 +16,7 @@ import Event from "../screens/Event";
 import EventMap from "../screens/EventMap";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AuthContext } from "../context/AuthContext";
+import CreateEvent from "../screens/CreateEvent";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -114,7 +115,7 @@ export default function BottomTabNav() {
         />
         <Tab.Screen
           name="Events"
-          component={Tickets} // Use the stack navigator here
+          component={CreateEvent} // Use the stack navigator here
           options={{
             tabBarIcon: ({ focused }) => (
               <Ionicons
