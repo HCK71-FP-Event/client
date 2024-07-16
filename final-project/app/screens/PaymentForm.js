@@ -3,14 +3,15 @@ import { View, Text, TextInput, Button, StyleSheet, Alert } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
 export default function PaymentForm({ route }) {
-  const { event } = route.params;
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [eventName, setEventName] = useState(event ? event.title : "");
-  const [eventDate, setEventDate] = useState(event ? event.date : new Date());
-  const [ticketPrice, setTicketPrice] = useState(
-    event ? event.ticketPrice : ""
+  // console.log(route);
+  const { event, user } = route.params;
+  console.log(event.price);
+  const [eventPrice, setPrice] = useState(event.price);
+  const [eventName, setEventName] = useState(event ? event.name : "");
+  const [eventDate, setEventDate] = useState(
+    event ? event.eventDate : new Date()
   );
+  const [ticketPrice, setTicketPrice] = useState(event ? event.price : "");
   const [ticketQuantity, setTicketQuantity] = useState("1"); // Set default to "1"
   const [totalPrice, setTotalPrice] = useState(0);
 
@@ -42,14 +43,18 @@ export default function PaymentForm({ route }) {
       <View style={styles.formContainer}>
         <Text style={styles.title}>Form Ticket</Text>
         <Text style={styles.label}>Nama Customer:</Text>
-        <TextInput style={styles.input} value={name} onChangeText={setName} />
+        <TextInput
+          style={styles.input}
+          editable={false}
+          value={user.fullName}
+        />
 
         <Text style={styles.label}>Email Customer:</Text>
         <TextInput
           style={styles.input}
-          value={email}
-          onChangeText={setEmail}
+          value={user.email}
           keyboardType="email-address"
+          editable={false}
         />
 
         <Text style={styles.label}>Nama Event:</Text>
@@ -61,20 +66,11 @@ export default function PaymentForm({ route }) {
         />
 
         <Text style={styles.label}>
-          Tanggal dan Waktu Event: {eventDate.toString()}
+          Tanggal dan Waktu Event: {new Date(eventDate).toLocaleDateString()}
         </Text>
 
-        <Text style={styles.label}>Harga Satuan Tiket:</Text>
-        <TextInput
-          style={styles.input}
-          value={ticketPrice}
-          onChangeText={(text) => {
-            setTicketPrice(text);
-            calculateTotalPrice();
-          }}
-          keyboardType="numeric"
-          editable={false}
-        />
+        <Text style={styles.label}>Harga Satuan Tiket: {event.price}</Text>
+        <TextInput style={styles.input} value={`${event.price}`} editable={false} />
 
         <Text style={styles.label}>Quantity Tiket:</Text>
         <TextInput
