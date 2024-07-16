@@ -43,7 +43,11 @@
     "react-native-toast-message": "^2.2.0",
     "react-native-webview": "^13.10.5",
     "sweetalert2": "^11.12.2",
-    "yup": "^1.4.0"
+    "yup": "^1.4.0",
+    "react-native-reanimated": "~3.10.1",
+    "react-native-gesture-handler": "~2.16.1",
+    "expo-constants": "~16.0.2",
+    "@react-native-picker/picker": "2.7.5"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"
