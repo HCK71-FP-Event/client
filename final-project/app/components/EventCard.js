@@ -8,6 +8,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { PanGestureHandler } from "react-native-gesture-handler";
 
+
 const EventCard = ({ event, style, onToggleMap, onBuyTicket }) => {
   const translateX = useSharedValue(0);
 
@@ -158,6 +159,18 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "bold",
     color: "#fff",
+  },
+  buyButton: {
+    position: "absolute",
+    bottom: 10,
+    left: 10,
+    backgroundColor: "#ff6347",
+    padding: 10,
+    borderRadius: 5,
+  },
+  buyButtonText: {
+    color: "#fff",
+    fontWeight: "bold",
   },
 });
 
