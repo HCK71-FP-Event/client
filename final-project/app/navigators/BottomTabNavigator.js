@@ -16,7 +16,11 @@ import Event from "../screens/Event";
 import EventMap from "../screens/EventMap";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AuthContext } from "../context/AuthContext";
+
 import CreateEvent from "../screens/CreateEvent";
+
+import PaymentForm from "../screens/PaymentForm";
+
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -45,6 +49,7 @@ function EventStackNavigator() {
         options={{ headerShown: false }}
       />
       <Stack.Screen name="EventDetail" component={Event} />
+      <Stack.Screen name="PaymentForm" component={PaymentForm} />
     </Stack.Navigator>
   );
 }

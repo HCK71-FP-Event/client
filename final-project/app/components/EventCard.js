@@ -7,10 +7,12 @@ import Animated, {
   withSpring,
 } from "react-native-reanimated";
 import { PanGestureHandler } from "react-native-gesture-handler";
+import { useNavigation } from "@react-navigation/native";
 
-
-const EventCard = ({ event, style, onToggleMap, onBuyTicket }) => {
+const EventCard = ({ event, user, style, onToggleMap }) => {
+  // console.log(user);
   const translateX = useSharedValue(0);
+  const navigation = useNavigation();
 
   const gestureHandler = useAnimatedGestureHandler({
     onStart: (_, ctx) => {
@@ -29,6 +31,10 @@ const EventCard = ({ event, style, onToggleMap, onBuyTicket }) => {
       transform: [{ translateX: translateX.value }],
     };
   });
+
+  const handleBuyTicket = () => {
+    navigation.navigate("PaymentForm", { event, user });
+  };
 
   if (!event) {
     return null;
@@ -61,7 +67,10 @@ const EventCard = ({ event, style, onToggleMap, onBuyTicket }) => {
             <TouchableOpacity style={styles.mapToggle} onPress={onToggleMap}>
               <Text style={styles.mapToggleText}>Show Map</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.buyButton} onPress={onBuyTicket}>
+            <TouchableOpacity
+              style={styles.buyButton}
+              onPress={handleBuyTicket}
+            >
               <Text style={styles.buyButtonText}>Buy Ticket</Text>
             </TouchableOpacity>
           </View>
@@ -94,7 +103,7 @@ const styles = StyleSheet.create({
   },
   image: {
     width: "100%",
-    height: 150,
+    height: 390,
   },
   cardContent: {
     padding: 10,
@@ -159,10 +168,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "bold",
     color: "#fff",
-  },
-  buyButtonText: {
-    color: "#fff",
-    fontWeight: "bold",
   },
 });
 
