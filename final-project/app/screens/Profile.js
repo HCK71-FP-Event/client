@@ -1,6 +1,13 @@
-import { View, Text, TouchableOpacity, SafeAreaView } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  SafeAreaView,
+} from "react-native";
 import React from "react";
 import { Ionicons } from "@expo/vector-icons";
+import { StatusBar } from "expo-status-bar";
 
 export default function Profile({ navigation }) {
   const navigateToEditProfile = () => {
@@ -14,152 +21,164 @@ export default function Profile({ navigation }) {
         backgroundColor: "#fff",
       }}
     >
+      <StatusBar backgroundColor="#808080" />
       <View
         style={{
-          marginHorizontal: 12,
-          flexDirection: "row",
-          justifyContent: "center",
-          marginTop: 20,
+          width: "100%",
+          position: "relative",
         }}
       >
-        <TouchableOpacity
-          onPress={() => navigation.goBack()}
-          style={{
-            position: "absolute",
-            left: 0,
+        <Image
+          source={{
+            uri: "https://i.pinimg.com/474x/cd/92/37/cd92379f92f30f07b989a88996c44408.jpg",
           }}
-        >
-          <Ionicons name="arrow-back" size={24} color={"#000"} />
-        </TouchableOpacity>
-        <Text
+          resizeMode="cover"
           style={{
-            fontSize: 20,
-            fontWeight: "bold",
+            height: 228,
+            width: "100%",
           }}
-        >
-          Profile
-        </Text>
-      </View>
-
-      {/* Account Settings */}
-      <View
-        style={{
-          marginTop: 20,
-          marginHorizontal: 12,
-          paddingVertical: 10,
-          paddingHorizontal: 15,
-          backgroundColor: "#f5f5f5",
-          borderRadius: 10,
-        }}
-      >
+        />
         <TouchableOpacity
           onPress={navigateToEditProfile}
           style={{
+            position: "absolute",
+            right: 2,
+
+            backgroundColor: "transparent",
+            paddingVertical: 5,
+            paddingHorizontal: 2,
+            borderRadius: 10,
             flexDirection: "row",
-            alignItems: "center",
+            alignItems: "flex-end",
           }}
         >
-          <Ionicons name="person-circle" size={24} color="black" />
+          <View
+            style={{
+              width: 30,
+              height: 30,
+              borderRadius: 15,
+              backgroundColor: "#fff",
+              alignItems: "center",
+              justifyContent: "center",
+              opacity: "20%",
+            }}
+          >
+            <Ionicons name="pencil" size={20} color="black" />
+          </View>
           <Text
             style={{
-              marginLeft: 12,
+              marginLeft: 8,
+              marginHorizontal: 2,
+              marginVertical: 2,
               fontWeight: "600",
               fontSize: 16,
             }}
-          >
-            Edit Profile
-          </Text>
+          ></Text>
         </TouchableOpacity>
+      </View>
+
+      <View
+        style={{
+          flex: 1,
+          alignItems: "center",
+        }}
+      >
+        <Image
+          source={{
+            uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSviRMCGgqQ4I_iNG11jPQgvSK6SoMKvevcxA&s",
+          }}
+          resizeMode="contain"
+          style={{
+            height: 155,
+            width: 155,
+            borderRadius: 999,
+            borderColor: "#0000ff",
+            borderWidth: 2,
+            marginTop: -50,
+          }}
+        />
+
+        <Text
+          style={{
+            marginVertical: 2,
+            color: "#0000ff",
+            fontWeight: "bold",
+            fontSize: 18,
+          }}
+        >
+          Joufando
+        </Text>
+
+        <View
+          style={{
+            flexDirection: "row",
+            marginVertical: 2,
+            alignItems: "center",
+          }}
+        >
+          <Ionicons name="location" size={24} color="black" />
+          <Text>Jakarta, Indonesia</Text>
+        </View>
+
+        <View
+          style={{
+            flex: 1,
+            flexDirection: "row",
+            marginVertical: 2,
+          }}
+        >
+          <View
+            style={{
+              flexDirection: "column",
+              alignItems: "center",
+              marginHorizontal: 6,
+            }}
+          >
+            <Text
+              style={{
+                fontSize: 18,
+                fontWeight: "bold",
+                color: "#0000ff",
+              }}
+            >
+              5
+            </Text>
+            <Text
+              style={{
+                fontSize: 12,
+                fontWeight: "light",
+              }}
+            >
+              Interests
+            </Text>
+          </View>
+          {/* interest = category event */}
+          <View
+            style={{
+              flexDirection: "column",
+              alignItems: "center",
+              marginHorizontal: 6,
+            }}
+          >
+            <Text
+              style={{
+                fontSize: 18,
+                fontWeight: "bold",
+                color: "#0000ff",
+              }}
+            >
+              2
+            </Text>
+            <Text
+              style={{
+                fontSize: 12,
+              }}
+            >
+              Tickets
+            </Text>
+          </View>
+        </View>
       </View>
     </SafeAreaView>
   );
 }
-
-/*
-import { View, Text, TouchableOpacity, SafeAreaView } from "react-native";
-import React from "react";
-import { MaterialIcons } from "@expo/vector-icons";
-
-export default function Profile({ navigation }) {
-  const navigateToEditProfile = () => {
-    navigation.navigate("EditProfile");
-  };
-
-  const accountItem = {
-    icon: "person-outline",
-    text: "Edit Profile",
-    action: navigateToEditProfile,
-  };
-
-  const renderSettingsItem = ({ icon, text, action }) => (
-    <TouchableOpacity
-      onPress={action}
-      style={{
-        flexDirection: "row",
-        alignItems: "center",
-        paddingVertical: 8,
-        paddingLeft: 12,
-      }}
-    >
-      <MaterialIcons name="icon" size={24} color="black" />
-      <Text
-        style={{
-          marginLeft: 36,
-          fontWeight: "semibold",
-          fontSize: 16,
-        }}
-      >
-        {text}
-      </Text>
-    </TouchableOpacity>
-  );
-  return (
-    <SafeAreaView
-      style={{
-        flex: 1,
-        backgroundColor: "#fff",
-      }}
-    >
-      <View
-        style={{
-          marginHorizontal: 12,
-          flexDirection: "row",
-          justifyContent: "center",
-        }}
-      >
-        <TouchableOpacity
-          onPress={() => navigation.goBack()}
-          style={{
-            position: "absolute",
-            left: 0,
-          }}
-        >
-          <MaterialIcons name="keyboard-arrow-left" size={24} color={"#000"} />
-        </TouchableOpacity>
-        <Text
-          style={{
-            fontSize: 20,
-            fontWeight: "bold",
-          }}
-        >
-          Profile
-        </Text>
-      </View>
-
-//       {/* Account Settings */
-
-//       <View style={{ marginBottom: 12 }}>
-//         <View
-//           style={{
-//             borderRadius: 12,
-//             backgroundColor: "#fff",
-//           }}
-//         >
-//           {accountItem.map((item, index) => (
-//             <React.Fragment key={index}>{renderSettingsItem}</React.Fragment>
-//           ))}
-//         </View>
-//       </View>
-//     </SafeAreaView>
-//   );
-// }
