@@ -182,3 +182,5 @@ export default function Profile({ navigation }) {
     </SafeAreaView>
   );
 }
+
+// antirasis
