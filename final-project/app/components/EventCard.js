@@ -10,7 +10,6 @@ import { PanGestureHandler } from "react-native-gesture-handler";
 import { useNavigation } from "@react-navigation/native";
 
 const EventCard = ({ event, user, style, onToggleMap }) => {
-  // console.log(user);
   const translateX = useSharedValue(0);
   const navigation = useNavigation();
 
@@ -44,35 +43,38 @@ const EventCard = ({ event, user, style, onToggleMap }) => {
     <View style={[styles.cardContainer, style]}>
       <PanGestureHandler onGestureEvent={gestureHandler}>
         <Animated.View style={[styles.card, animatedStyle]}>
-          <Image
-            style={styles.image}
-            source={{
-              uri: event.imageUrl,
-            }}
-          />
-          <View style={styles.cardContent}>
-            <Text style={styles.title}>{event.name}</Text>
-            <View style={styles.categoryContainer}>
-              <Text style={styles.category}>{event.Category.name}</Text>
+          <View style={styles.contentContainer}>
+            <Image
+              style={styles.image}
+              source={{
+                uri: event.imageUrl,
+              }}
+              resizeMode="cover"
+            />
+            <View style={styles.textContainer}>
+              <Text style={styles.title}>{event.name}</Text>
+              <View style={styles.categoryContainer}>
+                <Text style={styles.category}>{event.Category.name}</Text>
+              </View>
+              <Text style={styles.date}>
+                {event.eventDate
+                  ? new Date(event.eventDate).toLocaleDateString()
+                  : "Unknown Date"}
+              </Text>
+              <Text style={styles.description}>{event.description}</Text>
+              <Text style={styles.quantity}>Tickets Left: {event.quantity}</Text>
+              <View style={styles.buttonContainer}>
+                <TouchableOpacity style={styles.mapToggle} onPress={onToggleMap}>
+                  <Text style={styles.mapToggleText}>Show Map</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.buyButton}
+                  onPress={handleBuyTicket}
+                >
+                  <Text style={styles.buyButtonText}>Buy Ticket</Text>
+                </TouchableOpacity>
+              </View>
             </View>
-            <Text style={styles.date}>
-              {event.eventDate
-                ? new Date(event.eventDate).toLocaleDateString()
-                : "Unknown Date"}
-            </Text>
-            <Text style={styles.description}>{event.description}</Text>
-            <Text style={styles.quantity}>Quantity: {event.quantity}</Text>
-          </View>
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.mapToggle} onPress={onToggleMap}>
-              <Text style={styles.mapToggleText}>Show Map</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.buyButton}
-              onPress={handleBuyTicket}
-            >
-              <Text style={styles.buyButtonText}>Buy Ticket</Text>
-            </TouchableOpacity>
           </View>
         </Animated.View>
       </PanGestureHandler>
@@ -89,83 +91,91 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: "#fff",
     borderRadius: 15,
-    overflow: "hidden",
     marginBottom: 20,
     width: "90%",
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
-      height: 2,
+      height: 4,
     },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+    elevation: 8,
+    borderColor: "#e0e0e0",
+    borderWidth: 1,
+  },
+  contentContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    padding: 15,
   },
   image: {
-    width: "100%",
-    height: 390,
+    width: 120,
+    height: 170,
+    borderRadius: 10,
+    marginRight: 15,
   },
-  cardContent: {
-    padding: 10,
+  textContainer: {
+    flex: 1,
   },
   title: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: "bold",
-    marginBottom: 10,
+    marginBottom: 5,
     color: "#333",
   },
   categoryContainer: {
-    alignSelf: "flex-start",
     backgroundColor: "#e0e0e0",
     borderRadius: 15,
     paddingHorizontal: 10,
     paddingVertical: 5,
-    marginBottom: 10,
+    marginBottom: 5,
   },
   category: {
-    fontSize: 14,
+    fontSize: 12,
     color: "#555",
   },
   date: {
-    fontSize: 14,
+    fontSize: 12,
     color: "#666",
-    marginBottom: 10,
+    marginBottom: 5,
   },
   description: {
     fontSize: 14,
     color: "#666",
-    marginBottom: 10,
+    marginBottom: 5,
   },
   quantity: {
-    fontSize: 14,
+    fontSize: 12,
     color: "#666",
     marginBottom: 10,
   },
   buttonContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
-    paddingHorizontal: 15,
-    paddingBottom: 15,
+    marginTop: 10,
   },
   mapToggle: {
     backgroundColor: "#007bff",
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 5,
+    paddingVertical: 8,
+    paddingHorizontal: 15,
+    borderRadius: 15,
+    elevation: 3,
   },
   mapToggleText: {
-    fontSize: 14,
+    fontSize: 12,
     fontWeight: "bold",
     color: "#fff",
   },
   buyButton: {
     backgroundColor: "#28a745",
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 5,
+    paddingVertical: 8,
+    paddingHorizontal: 15,
+    borderRadius: 15,
+    elevation: 3,
   },
   buyButtonText: {
-    fontSize: 14,
+    fontSize: 12,
     fontWeight: "bold",
     color: "#fff",
   },
