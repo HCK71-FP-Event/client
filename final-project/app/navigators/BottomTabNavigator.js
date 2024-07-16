@@ -15,6 +15,9 @@ import Tickets from "../screens/Tickets";
 import Profile from "../screens/Profile";
 import Event from "../screens/Event";
 import Map from "../components/Map";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { AuthContext } from "../context/AuthContext";
+import EventMap from "../screens/EventMap";
 
 const Tab = createBottomTabNavigator();
 
@@ -76,7 +79,7 @@ export default function BottomTabNav() {
         />
         <Tab.Screen
           name="EventScreen"
-          component={Map}
+          component={EventMap}
           options={{
             tabBarIcon: ({ focused }) => (
               <View

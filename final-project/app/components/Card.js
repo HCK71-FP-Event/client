@@ -1,39 +1,22 @@
 import { useNavigation } from "@react-navigation/native";
-import { Button, Image, Text, View } from "react-native";
+import { Button, Image, Text, View, StyleSheet } from "react-native";
 
 export default function Card({ data }) {
   const navigation = useNavigation();
-
   return (
-    <View
-      style={{
-        height: 150,
-        width: "100%",
-        backgroundColor: "#f3f3f3",
-        padding: 10,
-        flexDirection: "row",
-        gap: 10,
-        borderRadius: 7,
-        marginBottom: 8,
-      }}
-    >
+    <View style={styles.card}>
       <Image
-        style={{ width: 100, height: "100%", borderRadius: 8 }}
+        style={styles.image}
         source={{
-          uri: `https://picsum.photos/200/300?random=${data.id}`,
+          uri: data.imageUrl,
         }}
       />
-      <View
-        style={{
-          flex: 1,
-          justifyContent: "space-between",
-        }}
-      >
+      <View style={styles.cardContent}>
         <View>
-          <Text style={{ fontSize: 20, fontWeight: "bold" }}>
-            {data.title.substring(0, 20)}
-          </Text>
-          <Text style={{ fontSize: 11 }}>{data.body.substring(0, 50)}</Text>
+          <Text style={styles.title}>{data.name}</Text>
+          <View style={styles.categoryContainer}>
+            <Text style={styles.category}>{data.Category.name}</Text>
+          </View>
         </View>
         <Button
           onPress={() =>
@@ -47,3 +30,42 @@ export default function Card({ data }) {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  card: {
+    height: 150,
+    width: "100%",
+    backgroundColor: "#f3f3f3",
+    padding: 10,
+    flexDirection: "row",
+    gap: 10,
+    borderRadius: 7,
+    marginBottom: 8,
+  },
+  image: {
+    width: 100,
+    height: "100%",
+    borderRadius: 8,
+  },
+  cardContent: {
+    flex: 1,
+    justifyContent: "space-between",
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: "bold",
+  },
+  categoryContainer: {
+    marginTop: 5,
+    alignSelf: "flex-start",
+    backgroundColor: "#e0e0e0",
+    borderRadius: 15,
+    paddingHorizontal: 10, 
+    paddingVertical: 5,
+  },
+  category: {
+    fontSize: 11,
+    fontWeight: "bold",
+    color: "#333", // Text color inside the capsule
+  },
+});

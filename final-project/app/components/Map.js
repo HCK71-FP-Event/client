@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from "react";
 import MapView, { Marker } from "react-native-maps";
 import * as Location from "expo-location";
-import { StyleSheet, View, Text, ActivityIndicator } from "react-native";
+import { StyleSheet, View, Text, ActivityIndicator, Pressable } from "react-native";
 import Axios from "../utils/axios";
 
 export default function Map() {
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
   const [events, setEvents] = useState([]);
-  const radius = 2000;
   const pinColor = "#00BFFF";
 
   useEffect(() => {
@@ -22,17 +21,15 @@ export default function Map() {
       let location = await Location.getCurrentPositionAsync({});
       setLocation(location);
 
-      fetchEvents(location.coords.latitude, location.coords.longitude, radius);
+      fetchEvents(location.coords.latitude, location.coords.longitude);
     })();
   }, []);
 
-  const fetchEvents = async (latitude, longitude, radius) => {
+  const fetchEvents = async (latitude, longitude) => {
     try {
-      console.log(latitude, longitude, radius);
       const response = await Axios.get(
         `/event?long=${longitude}&lat=${latitude}`
       );
-      console.log("Response data:", response);
       setEvents(response.data);
     } catch (error) {
       console.error("Error fetching events:", error);
@@ -43,56 +40,58 @@ export default function Map() {
       }
     }
   };
-
+  console.log(events);
   return (
-    <View style={styles.container}>
-      <View style={styles.card}>
-        {location ? (
-          <MapView
-            style={styles.map}
-            initialRegion={{
-              latitude: location.coords.latitude,
-              longitude: location.coords.longitude,
-              latitudeDelta: 0.0922,
-              longitudeDelta: 0.0421,
-            }}
-          >
-            <Marker
-              coordinate={{
+    <>
+      <View style={styles.container}>
+        <View style={styles.card}>
+          {location ? (
+            <MapView
+              style={styles.map}
+              initialRegion={{
                 latitude: location.coords.latitude,
                 longitude: location.coords.longitude,
+                latitudeDelta: 0.01,
+                longitudeDelta: 0.01,
               }}
-              title="You are here"
-            />
-            {events.map((event) => (
+            >
               <Marker
-                key={event.id}
                 coordinate={{
-                  latitude: event.location.coordinates[1], // Assuming event.location is in GeoJSON format
-                  longitude: event.location.coordinates[0],
+                  latitude: location.coords.latitude,
+                  longitude: location.coords.longitude,
                 }}
-                title={event.name}
-                pinColor={pinColor}
+                title="You are here"
               />
-            ))}
-          </MapView>
-        ) : (
-          <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" color="#0000ff" />
-            <Text>{errorMsg || "Waiting.."}</Text>
-          </View>
-        )}
+              {events.map((event) => (
+                <Marker
+                  key={event.id}
+                  coordinate={{
+                    latitude: event.location.coordinates[1],
+                    longitude: event.location.coordinates[0],
+                  }}
+                  title={event.name}
+                  pinColor={pinColor}
+                />
+              ))}
+            </MapView>
+          ) : (
+            <View style={styles.loadingContainer}>
+              <ActivityIndicator size="large" color="#0000ff" />
+              <Text>{errorMsg || "Waiting.."}</Text>
+            </View>
+          )}
+        </View>
       </View>
-    </View>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#f0f0f0",
+    // justifyContent: "center",
+    // alignItems: "center",
+    backgroundColor: "#fafafa",
   },
   card: {
     width: "100%",

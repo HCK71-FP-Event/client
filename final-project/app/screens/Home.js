@@ -1,27 +1,64 @@
 import { useEffect, useState } from "react";
-import { FlatList, StatusBar, View, StyleSheet } from "react-native";
+import {
+  FlatList,
+  StatusBar,
+  View,
+  StyleSheet,
+  TextInput,
+  Button,
+} from "react-native";
 import Card from "../components/Card";
-import Map from "../components/Map";
+import Axios from "../utils/axios";
 
 export default function Home() {
   const [data, setData] = useState([]);
+  const [search, setSearch] = useState("");
+  const [filter, setFilter] = useState("");
 
   useEffect(() => {
-    fetch("https://jsonplaceholder.typicode.com/posts")
-      .then((response) => response.json())
-      .then((json) => setData(json));
+    fetchData();
   }, []);
+
+  const fetchData = async (search = "", filter = "") => {
+    try {
+      const response = await Axios.get(
+        `/allEvent?search=${search}&filter=${filter}`
+      );
+      console.log(response.data.allEvent);
+      setData(response.data.allEvent);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleSearch = () => {
+    fetchData(search, filter);
+  };
+
   return (
-    <>
-      <View style={styles.container}>
-        <StatusBar />
-        <FlatList
-          data={data}
-          renderItem={({ item }) => <Card data={item} />}
-          keyExtractor={(item) => item.id}
+    <View style={styles.container}>
+      <StatusBar />
+      <View style={styles.searchContainer}>
+        <TextInput
+          style={styles.input}
+          placeholder="Search events"
+          value={search}
+          onChangeText={(text) => setSearch(text)}
         />
+        <TextInput
+          style={styles.input}
+          placeholder="Filter by category"
+          value={filter}
+          onChangeText={(text) => setFilter(text)}
+        />
+        <Button title="Search" onPress={handleSearch} />
       </View>
-    </>
+      <FlatList
+        data={data}
+        renderItem={({ item }) => <Card data={item} />}
+        keyExtractor={(item) => item.id.toString()}
+      />
+    </View>
   );
 }
 
@@ -30,6 +67,17 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
     padding: 10,
-    gap: 10,
+  },
+  searchContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 10,
+  },
+  input: {
+    flex: 1,
+    borderColor: "#ccc",
+    borderWidth: 1,
+    padding: 8,
+    marginRight: 10,
   },
 });
