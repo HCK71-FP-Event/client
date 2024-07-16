@@ -10,11 +10,9 @@ import {
   TouchableOpacity,
   Platform,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
 import { Picker } from "@react-native-picker/picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import Axios from "../utils/axios";
-import axios from "axios";
 
 const CreateEvent = ({ navigation }) => {
   // const navigation = useNavigation();
@@ -102,89 +100,93 @@ const CreateEvent = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollViewContainer}>
-        <Text style={styles.label}>Nama Event:</Text>
-        <TextInput
-          style={styles.input}
-          value={eventName}
-          onChangeText={setEventName}
-          placeholder="Nama Event"
-        />
+        <View style={styles.formContainer}>
+          <Text style={styles.title}>Create Your Event</Text>
+          <Text style={styles.label}>Nama Event:</Text>
+          <TextInput
+            style={styles.input}
+            value={eventName}
+            onChangeText={setEventName}
+            placeholder="Nama Event"
+          />
 
-        <Text style={styles.label}>URL Gambar:</Text>
-        <TextInput
-          style={styles.input}
-          value={imageUrl}
-          onChangeText={setImageUrl}
-          placeholder="URL Gambar"
-        />
+          <Text style={styles.label}>URL Gambar:</Text>
+          <TextInput
+            style={styles.input}
+            value={imageUrl}
+            onChangeText={setImageUrl}
+            placeholder="URL Gambar"
+          />
 
-        <Text style={styles.label}>Longitude:</Text>
-        <TextInput
-          style={styles.input}
-          value={longitude}
-          onChangeText={setLongitude}
-          keyboardType="numeric"
-          placeholder="Longitude"
-        />
+          <Text style={styles.label}>Longitude:</Text>
+          <TextInput
+            style={styles.input}
+            value={longitude}
+            onChangeText={setLongitude}
+            keyboardType="numeric"
+            placeholder="Longitude"
+          />
 
-        <Text style={styles.label}>Latitude:</Text>
-        <TextInput
-          style={styles.input}
-          value={latitude}
-          onChangeText={setLatitude}
-          keyboardType="numeric"
-          placeholder="Latitude"
-        />
+          <Text style={styles.label}>Latitude:</Text>
+          <TextInput
+            style={styles.input}
+            value={latitude}
+            onChangeText={setLatitude}
+            keyboardType="numeric"
+            placeholder="Latitude"
+          />
 
-        <Text style={styles.label}>Quantity:</Text>
-        <TextInput
-          style={styles.input}
-          value={quantity}
-          onChangeText={setQuantity}
-          keyboardType="numeric"
-          placeholder="Quantity"
-        />
+          <Text style={styles.label}>Quantity:</Text>
+          <TextInput
+            style={styles.input}
+            value={quantity}
+            onChangeText={setQuantity}
+            keyboardType="numeric"
+            placeholder="Quantity"
+          />
 
-        <Text style={styles.label}>Kategori:</Text>
-        <Picker
-          selectedValue={category}
-          style={styles.picker}
-          onValueChange={(itemValue) => setCategory(itemValue)}
-        >
-          {categories.map((el, idx) => (
-            <Picker.Item label={el.name} value={el.id} key={idx} />
-          ))}
-        </Picker>
-
-        <Text style={styles.label}>Tanggal Event:</Text>
-        <View>
-          <TouchableOpacity
-            onPress={() => setShowDatePicker(true)}
-            style={styles.datePickerButton}
+          <Text style={styles.label}>Kategori:</Text>
+          <Picker
+            selectedValue={category}
+            style={styles.picker}
+            onValueChange={(itemValue) => setCategory(itemValue)}
           >
-            <Text>{eventDate.toDateString()}</Text>
-          </TouchableOpacity>
-          {showDatePicker && (
-            <DateTimePicker
-              value={eventDate}
-              mode="date"
-              display="default"
-              onChange={handleDateChange}
-              minimumDate={new Date()}
-            />
-          )}
+            {categories.map((el, idx) => (
+              <Picker.Item label={el.name} value={el.id} key={idx} />
+            ))}
+          </Picker>
+
+          <Text style={styles.label}>Tanggal Event:</Text>
+          <View>
+            <TouchableOpacity
+              onPress={() => setShowDatePicker(true)}
+              style={styles.datePickerButton}
+            >
+              <Text>{eventDate.toDateString()}</Text>
+            </TouchableOpacity>
+            {showDatePicker && (
+              <DateTimePicker
+                value={eventDate}
+                mode="date"
+                display="default"
+                onChange={handleDateChange}
+                minimumDate={new Date()}
+              />
+            )}
+          </View>
+
+          <Text style={styles.label}>Deskripsi:</Text>
+          <TextInput
+            style={[styles.input, { height: 100 }]}
+            value={description}
+            onChangeText={setDescription}
+            multiline
+            placeholder="Deskripsi Event"
+          />
+          <View style={styles.buttonContainer}>
+            <Button title="Submit" onPress={handleSubmit} color="#7B1FA2" />
+          </View>
         </View>
-
-        <Text style={styles.label}>Deskripsi:</Text>
-        <TextInput
-          style={[styles.input, { height: 100 }]}
-          value={description}
-          onChangeText={setDescription}
-          multiline
-          placeholder="Deskripsi Event"
-        />
-
-        <Button title="Submit" onPress={handleSubmit} />
       </ScrollView>
     </SafeAreaView>
   );
@@ -193,7 +195,7 @@ const CreateEvent = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#F3E5F5",
   },
   scrollViewContainer: {
     padding: 20,
@@ -229,6 +231,27 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingHorizontal: 10,
     marginBottom: 10,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    color: "#4A148C",
+    marginBottom: 20,
+    textAlign: "center",
+  },
+  formContainer: {
+    padding: 10,
+    backgroundColor: "#FFFFFF",
+    borderRadius: 10,
+    margin: 20,
+    elevation: 3,
+    width: "90%",
+    maxWidth: 400,
+  },
+  buttonContainer: {
+    marginTop: 20,
+    borderRadius: 5,
+    padding: 10,
   },
 });
 

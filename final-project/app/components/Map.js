@@ -24,14 +24,13 @@ export default function Map() {
       setLocation(location);
       fetchEvents(location.coords.latitude, location.coords.longitude);
     })();
-  }, []);
+  }, [location]);
 
   const fetchEvents = async (latitude, longitude) => {
     try {
       const response = await Axios.get(
         `/event?long=${longitude}&lat=${latitude}`
       );
-      console.log(response.data);
       setEvents(response.data);
     } catch (error) {
       console.error("Error fetching events:", error);
@@ -60,8 +59,8 @@ export default function Map() {
               initialRegion={{
                 latitude: location.coords.latitude,
                 longitude: location.coords.longitude,
-                latitudeDelta: 0.05,
-                longitudeDelta: 0.05,
+                latitudeDelta: 0.03,
+                longitudeDelta: 0.03,
               }}
             >
               <Marker

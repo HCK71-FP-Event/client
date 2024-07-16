@@ -1,9 +1,7 @@
-import React, { useContext } from "react";
+import React from "react";
 import {
   View,
   Platform,
-  TouchableOpacity,
-  Alert,
   StyleSheet,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
@@ -14,8 +12,6 @@ import Tickets from "../screens/Tickets";
 import Profile from "../screens/Profile";
 import Event from "../screens/Event";
 import EventMap from "../screens/EventMap";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { AuthContext } from "../context/AuthContext";
 
 import CreateEvent from "../screens/CreateEvent";
 
@@ -35,7 +31,7 @@ const screenOptions = {
     right: 0,
     left: 0,
     elevation: 0,
-    height: 60,
+    height: 50,
     backgroundColor: "#533263",
   },
 };
@@ -55,17 +51,6 @@ function EventStackNavigator() {
 }
 
 export default function BottomTabNav() {
-  const { setIsLoggedIn } = useContext(AuthContext);
-
-  async function handleLogout() {
-    try {
-      await AsyncStorage.removeItem("access_token");
-      setIsLoggedIn(false);
-    } catch (error) {
-      Alert.alert("Error", error.message);
-    }
-  }
-
   return (
     <View style={{ flex: 1 }}>
       <Tab.Navigator screenOptions={screenOptions}>
@@ -148,19 +133,3 @@ export default function BottomTabNav() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  logoutButton: {
-    position: "absolute",
-    bottom: 80,
-    right: 20,
-    backgroundColor: "#533263",
-    borderRadius: 30,
-    padding: 10,
-    elevation: 5,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.8,
-    shadowRadius: 2,
-  },
-});

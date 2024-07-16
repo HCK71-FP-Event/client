@@ -46,7 +46,6 @@ export default function PaymentForm({ route, navigation }) {
       } else {
         const { redirect_url } = response.data;
         Linking.openURL(redirect_url);
-        navigation.navigate("Home");
       }
     } catch (error) {
       Alert.alert("Error", error.message);
@@ -119,7 +118,7 @@ export default function PaymentForm({ route, navigation }) {
           />
 
           <View style={styles.buttonContainer}>
-            <Button title="Bayar" onPress={handleSubmit} color="#FFFFFF" />
+            <Button title="Bayar" onPress={handleSubmit} color="#7B1FA2" />
           </View>
         </View>
       </ScrollView>
@@ -131,6 +130,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#F3E5F5",
+    paddingBottom: 50,
   },
   scrollContainer: {
     flexGrow: 1,
@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   formContainer: {
-    padding: 20,
+    padding: 10,
     backgroundColor: "#FFFFFF",
     borderRadius: 10,
     margin: 20,
@@ -171,9 +171,7 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     marginTop: 20,
-    backgroundColor: "#7B1FA2",
     borderRadius: 5,
     padding: 10,
-    alignItems: "center",
   },
 });
