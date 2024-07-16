@@ -1,3 +1,5 @@
+import React, { useContext } from "react";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import {
   View,
   Platform,
@@ -5,9 +7,9 @@ import {
   Alert,
   StyleSheet,
 } from "react-native";
-import React, { useContext } from "react";
 import { Ionicons } from "@expo/vector-icons";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { AuthContext } from "../context/AuthContext";
 import Home from "../screens/Home";
 import Tickets from "../screens/Tickets";
 import Profile from "../screens/Profile";

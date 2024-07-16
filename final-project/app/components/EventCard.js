@@ -8,10 +8,12 @@ import Animated, {
 } from "react-native-reanimated";
 import { PanGestureHandler } from "react-native-gesture-handler";
 import MapView, { Marker } from "react-native-maps";
+import { useNavigation } from "@react-navigation/native"; // Import navigation hook
 
 const EventCard = ({ event }) => {
   const translateX = useSharedValue(0);
   const [mapVisible, setMapVisible] = useState(false);
+  const navigation = useNavigation(); // Initialize navigation
 
   const gestureHandler = useAnimatedGestureHandler({
     onStart: (_, ctx) => {
@@ -35,6 +37,10 @@ const EventCard = ({ event }) => {
     setMapVisible((prev) => !prev);
   };
 
+  const navigateToPaymentForm = () => {
+    navigation.navigate("PaymentForm", { event });
+  };
+
   if (!event) {
     return null;
   }
@@ -56,6 +62,12 @@ const EventCard = ({ event }) => {
             <Text style={styles.mapToggleText}>
               {mapVisible ? "Hide Map" : "Show Map"}
             </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.buyButton}
+            onPress={navigateToPaymentForm}
+          >
+            <Text style={styles.buyButtonText}>Buy Ticket</Text>
           </TouchableOpacity>
         </Animated.View>
       </PanGestureHandler>
@@ -141,6 +153,18 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: "bold",
     color: "#333",
+  },
+  buyButton: {
+    position: "absolute",
+    bottom: 10,
+    left: 10,
+    backgroundColor: "#ff6347",
+    padding: 10,
+    borderRadius: 5,
+  },
+  buyButtonText: {
+    color: "#fff",
+    fontWeight: "bold",
   },
 });
 
