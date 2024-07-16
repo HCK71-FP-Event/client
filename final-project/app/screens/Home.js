@@ -17,7 +17,7 @@ export default function Home({ navigation }) {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [data]);
 
   const fetchData = async (search = "", filter = "") => {
     try {
