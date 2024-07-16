@@ -160,14 +160,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#fff",
   },
-  buyButton: {
-    position: "absolute",
-    bottom: 10,
-    left: 10,
-    backgroundColor: "#ff6347",
-    padding: 10,
-    borderRadius: 5,
-  },
   buyButtonText: {
     color: "#fff",
     fontWeight: "bold",

@@ -118,7 +118,7 @@ export default function BottomTabNav() {
           options={{
             tabBarIcon: ({ focused }) => (
               <Ionicons
-                name="calendar-number-sharp"
+                name="add-circle"
                 size={24}
                 color={focused ? "#F0FFFF" : "#000000"}
               />
