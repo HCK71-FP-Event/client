@@ -145,9 +145,6 @@ export default function BottomTabNav() {
           }}
         />
       </Tab.Navigator>
-      <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-        <Ionicons name="log-out" size={24} color={"#fff"} />
-      </TouchableOpacity>
     </View>
   );
 }
