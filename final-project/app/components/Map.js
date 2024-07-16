@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
 import MapView, { Marker } from "react-native-maps";
 import * as Location from "expo-location";
-import { StyleSheet, View, Text, ActivityIndicator, Pressable } from "react-native";
+import { StyleSheet, View, Text, ActivityIndicator } from "react-native";
 import Axios from "../utils/axios";
 
 export default function Map() {
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
   const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
   const pinColor = "#00BFFF";
 
   useEffect(() => {
@@ -15,12 +16,12 @@ export default function Map() {
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") {
         setErrorMsg("Permission to access location was denied");
+        setLoading(false);
         return;
       }
 
       let location = await Location.getCurrentPositionAsync({});
       setLocation(location);
-
       fetchEvents(location.coords.latitude, location.coords.longitude);
     })();
   }, []);
@@ -30,20 +31,28 @@ export default function Map() {
       const response = await Axios.get(
         `/event?long=${longitude}&lat=${latitude}`
       );
+      console.log(response.data);
       setEvents(response.data);
     } catch (error) {
       console.error("Error fetching events:", error);
-      if (error.response && error.response.status === 401) {
-        setErrorMsg("Unauthorized: Please check your login credentials.");
-      } else {
-        setErrorMsg("Error fetching events: " + error.message);
-      }
+      setErrorMsg(
+        error.response && error.response.status === 401
+          ? "Unauthorized: Please check your login credentials."
+          : "Error fetching events: " + error.message
+      );
+    } finally {
+      setLoading(false);
     }
   };
-  console.log(events);
+
   return (
-    <>
-      <View style={styles.container}>
+    <View style={styles.container}>
+      {loading ? (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#0000ff" />
+          <Text>{errorMsg || "Loading events..."}</Text>
+        </View>
+      ) : (
         <View style={styles.card}>
           {location ? (
             <MapView
@@ -51,8 +60,8 @@ export default function Map() {
               initialRegion={{
                 latitude: location.coords.latitude,
                 longitude: location.coords.longitude,
-                latitudeDelta: 0.01,
-                longitudeDelta: 0.01,
+                latitudeDelta: 0.05,
+                longitudeDelta: 0.05,
               }}
             >
               <Marker
@@ -76,21 +85,18 @@ export default function Map() {
             </MapView>
           ) : (
             <View style={styles.loadingContainer}>
-              <ActivityIndicator size="large" color="#0000ff" />
-              <Text>{errorMsg || "Waiting.."}</Text>
+              <Text>{errorMsg || "Location data is unavailable"}</Text>
             </View>
           )}
         </View>
-      </View>
-    </>
+      )}
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // justifyContent: "center",
-    // alignItems: "center",
     backgroundColor: "#fafafa",
   },
   card: {

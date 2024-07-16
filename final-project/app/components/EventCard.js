@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import React from "react";
+import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
 import Animated, {
   useAnimatedGestureHandler,
   useSharedValue,
@@ -7,11 +7,9 @@ import Animated, {
   withSpring,
 } from "react-native-reanimated";
 import { PanGestureHandler } from "react-native-gesture-handler";
-import MapView, { Marker } from "react-native-maps";
 
-const EventCard = ({ event }) => {
+const EventCard = ({ event, style, onToggleMap, onBuyTicket }) => {
   const translateX = useSharedValue(0);
-  const [mapVisible, setMapVisible] = useState(false);
 
   const gestureHandler = useAnimatedGestureHandler({
     onStart: (_, ctx) => {
@@ -31,59 +29,43 @@ const EventCard = ({ event }) => {
     };
   });
 
-  const toggleMap = () => {
-    setMapVisible((prev) => !prev);
-  };
-
   if (!event) {
     return null;
   }
 
   return (
-    <View style={styles.cardContainer}>
+    <View style={[styles.cardContainer, style]}>
       <PanGestureHandler onGestureEvent={gestureHandler}>
         <Animated.View style={[styles.card, animatedStyle]}>
+          <Image
+            style={styles.image}
+            source={{
+              uri: event.imageUrl,
+            }}
+          />
           <View style={styles.cardContent}>
-            <Text style={styles.title}>{event.title}</Text>
-            <Text style={styles.date}>{event.date || "2024-08-01"}</Text>
-            <Text style={styles.location}>
-              {event.location && event.location.name
-                ? event.location.name
-                : "Unknown Location"}
+            <Text style={styles.title}>{event.name}</Text>
+            <View style={styles.categoryContainer}>
+              <Text style={styles.category}>{event.Category.name}</Text>
+            </View>
+            <Text style={styles.date}>
+              {event.eventDate
+                ? new Date(event.eventDate).toLocaleDateString()
+                : "Unknown Date"}
             </Text>
+            <Text style={styles.description}>{event.description}</Text>
+            <Text style={styles.quantity}>Quantity: {event.quantity}</Text>
           </View>
-          <TouchableOpacity style={styles.mapToggle} onPress={toggleMap}>
-            <Text style={styles.mapToggleText}>
-              {mapVisible ? "Hide Map" : "Show Map"}
-            </Text>
-          </TouchableOpacity>
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity style={styles.mapToggle} onPress={onToggleMap}>
+              <Text style={styles.mapToggleText}>Show Map</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.buyButton} onPress={onBuyTicket}>
+              <Text style={styles.buyButtonText}>Buy Ticket</Text>
+            </TouchableOpacity>
+          </View>
         </Animated.View>
       </PanGestureHandler>
-      {mapVisible &&
-        event.location &&
-        event.location.lat &&
-        event.location.lng && (
-          <View style={styles.mapContainer}>
-            <MapView
-              style={styles.map}
-              initialRegion={{
-                latitude: event.location.lat,
-                longitude: event.location.lng,
-                latitudeDelta: 0.0922,
-                longitudeDelta: 0.0421,
-              }}
-            >
-              <Marker
-                coordinate={{
-                  latitude: event.location.lat,
-                  longitude: event.location.lng,
-                }}
-                title={event.title || "Event Title"}
-                description={event.location.name || "Location Name"}
-              />
-            </MapView>
-          </View>
-        )}
     </View>
   );
 };
@@ -93,54 +75,89 @@ const styles = StyleSheet.create({
     width: "100%",
     alignItems: "center",
     justifyContent: "center",
-    position: "relative",
   },
   card: {
-    backgroundColor: "#f5f5f5",
-    borderRadius: 10,
+    backgroundColor: "#fff",
+    borderRadius: 15,
     overflow: "hidden",
     marginBottom: 20,
-    width: "80%",
-    height: 200,
-    position: "relative",
+    width: "90%",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  image: {
+    width: "100%",
+    height: 150,
   },
   cardContent: {
     padding: 10,
   },
   title: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: "bold",
-    marginBottom: 5,
+    marginBottom: 10,
+    color: "#333",
+  },
+  categoryContainer: {
+    alignSelf: "flex-start",
+    backgroundColor: "#e0e0e0",
+    borderRadius: 15,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    marginBottom: 10,
+  },
+  category: {
+    fontSize: 14,
+    color: "#555",
   },
   date: {
     fontSize: 14,
     color: "#666",
-    marginBottom: 5,
+    marginBottom: 10,
   },
-  location: {
+  description: {
     fontSize: 14,
     color: "#666",
+    marginBottom: 10,
   },
-  mapContainer: {
-    ...StyleSheet.absoluteFillObject,
-    zIndex: -1,
+  quantity: {
+    fontSize: 14,
+    color: "#666",
+    marginBottom: 10,
   },
-  map: {
-    ...StyleSheet.absoluteFillObject,
+  buttonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingHorizontal: 15,
+    paddingBottom: 15,
   },
   mapToggle: {
-    position: "absolute",
-    top: 10,
-    right: 10,
-    backgroundColor: "rgba(255, 255, 255, 0.7)",
-    padding: 5,
+    backgroundColor: "#007bff",
+    paddingVertical: 10,
+    paddingHorizontal: 20,
     borderRadius: 5,
-    zIndex: 1,
   },
   mapToggleText: {
-    fontSize: 12,
+    fontSize: 14,
     fontWeight: "bold",
-    color: "#333",
+    color: "#fff",
+  },
+  buyButton: {
+    backgroundColor: "#28a745",
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+  },
+  buyButtonText: {
+    fontSize: 14,
+    fontWeight: "bold",
+    color: "#fff",
   },
 });
 

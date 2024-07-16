@@ -1,3 +1,4 @@
+import React, { useContext } from "react";
 import {
   View,
   Platform,
@@ -5,19 +6,19 @@ import {
   Alert,
   StyleSheet,
 } from "react-native";
-import React, { useContext } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createStackNavigator } from "@react-navigation/stack";
 import Home from "../screens/Home";
 import Tickets from "../screens/Tickets";
 import Profile from "../screens/Profile";
 import Event from "../screens/Event";
-import Map from "../components/Map";
+import EventMap from "../screens/EventMap";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AuthContext } from "../context/AuthContext";
-import EventMap from "../screens/EventMap";
 
 const Tab = createBottomTabNavigator();
+const Stack = createStackNavigator();
 
 const screenOptions = {
   tabBarShowLabel: false,
@@ -33,6 +34,19 @@ const screenOptions = {
     backgroundColor: "#533263",
   },
 };
+
+function EventStackNavigator() {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="EventList"
+        component={Home}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen name="EventDetail" component={Event} />
+    </Stack.Navigator>
+  );
+}
 
 export default function BottomTabNav() {
   const { setIsLoggedIn } = useContext(AuthContext);
@@ -51,7 +65,7 @@ export default function BottomTabNav() {
       <Tab.Navigator screenOptions={screenOptions}>
         <Tab.Screen
           name="Home"
-          component={Home}
+          component={EventStackNavigator}
           options={{
             tabBarIcon: ({ focused }) => (
               <Ionicons
@@ -100,7 +114,7 @@ export default function BottomTabNav() {
         />
         <Tab.Screen
           name="Events"
-          component={Event}
+          component={Tickets} // Use the stack navigator here
           options={{
             tabBarIcon: ({ focused }) => (
               <Ionicons

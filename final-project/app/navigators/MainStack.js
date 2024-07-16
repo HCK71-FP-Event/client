@@ -24,7 +24,6 @@ export default function MainStack() {
 
         <>
           <Stack.Screen name="Main" component={BottomTabNav} />
-          {/* <Stack.Screen name="Comments" component={Comments} /> */}
         </>
 
       ) : (

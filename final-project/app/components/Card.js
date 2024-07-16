@@ -1,10 +1,16 @@
 import { useNavigation } from "@react-navigation/native";
-import { Button, Image, Text, View, StyleSheet } from "react-native";
+import {
+  Button,
+  Image,
+  Text,
+  View,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
 
-export default function Card({ data }) {
-  const navigation = useNavigation();
+export default function Card({ data, onPress }) {
   return (
-    <View style={styles.card}>
+    <TouchableOpacity style={styles.card} onPress={onPress}>
       <Image
         style={styles.image}
         source={{
@@ -18,16 +24,9 @@ export default function Card({ data }) {
             <Text style={styles.category}>{data.Category.name}</Text>
           </View>
         </View>
-        <Button
-          onPress={() =>
-            navigation.navigate("Details", {
-              id: data.id,
-            })
-          }
-          title="Details"
-        />
+        <Button onPress={onPress} title="Details" />
       </View>
-    </View>
+    </TouchableOpacity>
   );
 }
 
@@ -60,12 +59,12 @@ const styles = StyleSheet.create({
     alignSelf: "flex-start",
     backgroundColor: "#e0e0e0",
     borderRadius: 15,
-    paddingHorizontal: 10, 
+    paddingHorizontal: 10,
     paddingVertical: 5,
   },
   category: {
     fontSize: 11,
     fontWeight: "bold",
-    color: "#333", // Text color inside the capsule
+    color: "#333",
   },
 });

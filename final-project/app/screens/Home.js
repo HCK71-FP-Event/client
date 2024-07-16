@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   FlatList,
   StatusBar,
@@ -10,7 +10,7 @@ import {
 import Card from "../components/Card";
 import Axios from "../utils/axios";
 
-export default function Home() {
+export default function Home({ navigation }) {
   const [data, setData] = useState([]);
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("");
@@ -24,7 +24,6 @@ export default function Home() {
       const response = await Axios.get(
         `/allEvent?search=${search}&filter=${filter}`
       );
-      console.log(response.data.allEvent);
       setData(response.data.allEvent);
     } catch (err) {
       console.error(err);
@@ -55,7 +54,12 @@ export default function Home() {
       </View>
       <FlatList
         data={data}
-        renderItem={({ item }) => <Card data={item} />}
+        renderItem={({ item }) => (
+          <Card
+            data={item}
+            onPress={() => navigation.navigate("EventDetail", { id: item.id })}
+          />
+        )}
         keyExtractor={(item) => item.id.toString()}
       />
     </View>

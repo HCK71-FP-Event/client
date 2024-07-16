@@ -1,103 +1,139 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
-  TouchableOpacity,
-  FlatList,
   StyleSheet,
+  ActivityIndicator,
+  Modal,
+  TouchableOpacity,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { MaterialIcons } from "@expo/vector-icons";
+import Axios from "../utils/axios";
 import EventCard from "../components/EventCard";
+import MapView, { Marker } from "react-native-maps";
 
-const Event = ({ navigation }) => {
-  const [data, setData] = useState([]);
+const Event = ({ route }) => {
+  const { id } = route.params;
+  const [event, setEvent] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [mapVisible, setMapVisible] = useState(false);
 
   useEffect(() => {
-    const dummyData = [
-      {
-        id: 1,
-        title: "Event A",
-        date: "2024-08-01",
-        location: {
-          name: "Location A",
-          lat: 37.78825,
-          lng: -122.4324,
-        },
-      },
-      {
-        id: 2,
-        title: "Event B",
-        date: "2024-08-02",
-        location: {
-          name: "Location B",
-          lat: 37.785834,
-          lng: -122.406417,
-        },
-      },
-      {
-        id: 3,
-        title: "Event C",
-        date: "2024-08-03",
-        location: {
-          name: "Location C",
-          lat: 37.7749,
-          lng: -122.4194,
-        },
-      },
-    ];
+    fetchEventDetail();
+  }, [id]);
 
-    setData(dummyData);
-  }, []);
+  const fetchEventDetail = async () => {
+    try {
+      const response = await Axios.get(`/allEvent/${id}`);
+      setEvent(response.data.eventById);
+    } catch (err) {
+      console.error(err);
+      setError(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleToggleMap = () => {
+    setMapVisible((prev) => !prev);
+  };
+
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
+
+  if (error) {
+    return (
+      <View style={styles.loadingContainer}>
+        <Text>Failed to load event data</Text>
+      </View>
+    );
+  }
+
+  if (!event) {
+    return (
+      <View style={styles.loadingContainer}>
+        <Text>No event data available</Text>
+      </View>
+    );
+  }
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity
-          onPress={() => navigation.goBack()}
-          style={styles.backButton}
-        >
-          <MaterialIcons name="keyboard-arrow-left" size={24} color={"#000"} />
-        </TouchableOpacity>
-        <Text style={styles.headerText}>DetailEvent</Text>
-      </View>
-
-      <FlatList
-        data={data}
-        renderItem={({ item }) => <EventCard event={item} />}
-        keyExtractor={(item) => item.id.toString()}
-        horizontal
-        pagingEnabled
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.eventList}
+    <View style={styles.container}>
+      <EventCard
+        event={event}
+        style={styles.eventCard}
+        onToggleMap={handleToggleMap}
       />
-    </SafeAreaView>
+      <Modal visible={mapVisible} animationType="slide">
+        <View style={styles.fullScreenMapContainer}>
+          <MapView
+            style={styles.fullScreenMap}
+            initialRegion={{
+              latitude: event.location.coordinates[1],
+              longitude: event.location.coordinates[0],
+              latitudeDelta: 0.01,
+              longitudeDelta: 0.01,
+            }}
+          >
+            <Marker
+              coordinate={{
+                latitude: event.location.coordinates[1],
+                longitude: event.location.coordinates[0],
+              }}
+              title={event.name}
+              description={event.Category?.name}
+            />
+          </MapView>
+          <TouchableOpacity
+            style={styles.closeButton}
+            onPress={handleToggleMap}
+          >
+            <Text style={styles.closeButtonText}>Close Map</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#ffffff",
+    backgroundColor: "#fff",
   },
-  header: {
-    marginHorizontal: 12,
-    flexDirection: "row",
+  loadingContainer: {
+    flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    paddingVertical: 10,
   },
-  backButton: {
+  eventCard: {
+    margin: 1,
+  },
+  fullScreenMapContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  fullScreenMap: {
+    width: "100%",
+    height: "100%",
+  },
+  closeButton: {
     position: "absolute",
-    left: 0,
+    top: 40,
+    right: 20,
+    backgroundColor: "rgba(255, 255, 255, 0.8)",
+    padding: 10,
+    borderRadius: 5,
   },
-  headerText: {
-    fontSize: 20,
+  closeButtonText: {
+    fontSize: 14,
     fontWeight: "bold",
-    color: "#000",
-  },
-  eventList: {
-    flexGrow: 1,
   },
 });
 
