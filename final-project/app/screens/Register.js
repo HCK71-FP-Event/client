@@ -1,11 +1,13 @@
 import { StatusBar } from "expo-status-bar";
-import React from "react";
+import React, { useState } from "react";
 import {
   StyleSheet,
   View,
   KeyboardAvoidingView,
   ScrollView,
   Text,
+  Platform,
+  TouchableOpacity,
 } from "react-native";
 import { Formik } from "formik";
 import * as Yup from "yup";
@@ -13,7 +15,8 @@ import FormInput from "../components/FormInput";
 import ErrorMessage from "../components/ErrorMessage";
 import Heading from "../components/Heading";
 import FormButton from "../components/FormButton";
-import Axios from "../utils/axios"; // Ensure this is the correct path to your Axios instance
+import Axios from "../utils/axios";
+import DateTimePicker from "@react-native-community/datetimepicker";
 
 const validationSchema = Yup.object().shape({
   email: Yup.string()
@@ -34,7 +37,6 @@ const validationSchema = Yup.object().shape({
     .label("Phone Number")
     .required("Please enter your phone number"),
   address: Yup.string().label("Address").required("Please enter your address"),
-  avatar: Yup.string().label("Avatar").required("Please enter your avatar"),
 });
 
 export default function Register({ navigation }) {
@@ -54,13 +56,15 @@ export default function Register({ navigation }) {
         "Registration Successful With: " +
           JSON.stringify(response.data.message.email)
       );
-      navigation.navigate("Login"); // Navigate to login after successful registration
+      navigation.navigate("Login");
     } catch (error) {
       alert("Registration Failed: " + error.response.data.message);
     } finally {
       setSubmitting(false);
     }
   };
+
+  const [showDatePicker, setShowDatePicker] = useState(false);
 
   return (
     <KeyboardAvoidingView
@@ -94,6 +98,7 @@ export default function Register({ navigation }) {
               isSubmitting,
               touched,
               handleBlur,
+              setFieldValue,
             }) => (
               <>
                 <FormInput
@@ -144,18 +149,36 @@ export default function Register({ navigation }) {
                   errorValue={touched.fullname && errors.fullname}
                 />
 
-                <FormInput
-                  name="birthOfDate"
-                  label="Birth of Date"
-                  value={values.birthOfDate}
-                  onChangeText={handleChange("birthOfDate")}
-                  onBlur={handleBlur("birthOfDate")}
-                  placeholder="Enter Birth of Date"
-                  returnKeyType="done"
-                  autoCapitalize="none"
-                  iconName="calendar"
-                  iconColor="#533263"
-                />
+                <TouchableOpacity
+                  onPress={() => setShowDatePicker(true)}
+                  style={styles.dateInputContainer}
+                >
+                  <FormInput
+                    name="birthOfDate"
+                    label="Birth of Date"
+                    value={values.birthOfDate}
+                    placeholder="Select Date"
+                    iconName="calendar"
+                    iconColor="#533263"
+                    editable={false}
+                  />
+                </TouchableOpacity>
+                {showDatePicker && (
+                  <DateTimePicker
+                    value={new Date()}
+                    mode="date"
+                    display="default"
+                    onChange={(event, selectedDate) => {
+                      setShowDatePicker(false);
+                      if (selectedDate) {
+                        setFieldValue(
+                          "birthOfDate",
+                          selectedDate.toISOString().split("T")[0]
+                        );
+                      }
+                    }}
+                  />
+                )}
                 <ErrorMessage
                   errorValue={touched.birthOfDate && errors.birthOfDate}
                 />
@@ -169,6 +192,7 @@ export default function Register({ navigation }) {
                   placeholder="Enter Phone Number"
                   returnKeyType="done"
                   autoCapitalize="none"
+                  keyboardType="numeric"
                   iconName="call"
                   iconColor="#533263"
                 />
@@ -256,5 +280,16 @@ const styles = StyleSheet.create({
   signUp: {
     color: "#7B68EE",
     fontWeight: "bold",
+  },
+  dateInputContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginVertical: 10,
+  },
+  label: {
+    fontSize: 16,
+    color: "#533263",
+    fontWeight: "bold",
+    marginBottom: 5,
   },
 });

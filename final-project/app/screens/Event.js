@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import {
   View,
   Text,
@@ -10,6 +10,7 @@ import {
 import Axios from "../utils/axios";
 import EventCard from "../components/EventCard";
 import MapView, { Marker } from "react-native-maps";
+import { useFocusEffect } from "@react-navigation/native";
 
 const Event = ({ route }) => {
   const { id } = route.params;
@@ -19,9 +20,11 @@ const Event = ({ route }) => {
   const [error, setError] = useState(null);
   const [mapVisible, setMapVisible] = useState(false);
 
-  useEffect(() => {
-    fetchEventDetail();
-  }, [id]);
+  useFocusEffect(
+    useCallback(() => {
+      fetchEventDetail();
+    }, [id])
+  );
 
   const fetchEventDetail = async () => {
     try {

@@ -18,7 +18,6 @@ import Axios from "../utils/axios";
 const imageDataURL =
   "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSviRMCGgqQ4I_iNG11jPQgvSK6SoMKvevcxA&s";
 
-
 export default function EditProfile({ navigation }) {
   const [selectedImage, setSelectedImage] = useState(imageDataURL);
   const [email, setEmail] = useState("");
@@ -58,7 +57,6 @@ export default function EditProfile({ navigation }) {
       }
     })();
   }, []);
-
 
   const handleChangeStartDate = (event, date) => {
     if (date) {
@@ -290,6 +288,7 @@ const styles = {
     flexDirection: "row",
     justifyContent: "center",
     marginTop: 22,
+    paddingBottom: 80,
   },
   saveButton: {
     height: 50,
