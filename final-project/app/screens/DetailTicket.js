@@ -17,10 +17,10 @@ export default function DetailTicket({ route }) {
   const fetchDataGeo = async () => {
     try {
       const response = await axios.get(
-        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${data.lat},${data.long}&key=${process.env.EXPO_PUBLIC_API_GEOCODING}`
+        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${data.lat},${data.long}&key=AIzaSyB-GZPCe4mwnWllPDF9O-mvmyW_qYUiavI`
       );
       if (response?.data?.results[0]?.formatted_address) {
-        setGeo(response.data.results[0].formatted_address || "");
+        setGeo(response.data.results[0].formatted_address);
       }
     } catch (error) {
       console.log(error);
