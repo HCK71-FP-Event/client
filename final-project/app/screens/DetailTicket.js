@@ -101,7 +101,9 @@ export default function DetailTicket({ route }) {
           <View style={styles.tableRow}>
             <Text style={styles.tableCell}>{data.ticketQuantity}</Text>
             <Text style={styles.tableCell}>
-              {data.isFree ? "FREE" : `Rp. ${data.grandTotal}`}{" "}
+              {data.isFree
+                ? "FREE"
+                : `Rp. ${data?.grandTotal?.toLocaleString("id-ID")}`}{" "}
             </Text>
           </View>
         </View>
