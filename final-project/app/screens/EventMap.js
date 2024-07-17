@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import {
   View,
   StatusBar,
@@ -11,6 +11,7 @@ import * as Location from "expo-location";
 import Axios from "../utils/axios";
 import Map from "../components/Map";
 import Card from "../components/Card";
+import { useFocusEffect } from "@react-navigation/native";
 
 export default function EventMap({ navigation }) {
   const [data, setData] = useState([]);
@@ -18,20 +19,22 @@ export default function EventMap({ navigation }) {
   const [errorMsg, setErrorMsg] = useState(null);
   const [userLocation, setUserLocation] = useState(null);
 
-  useEffect(() => {
-    (async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") {
-        setErrorMsg("Permission to access location was denied");
-        setLoading(false);
-        return;
-      }
+  useFocusEffect(
+    useCallback(() => {
+      (async () => {
+        let { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== "granted") {
+          setErrorMsg("Permission to access location was denied");
+          setLoading(false);
+          return;
+        }
 
-      let location = await Location.getCurrentPositionAsync({});
-      setUserLocation(location.coords);
-      fetchEvents(location.coords.latitude, location.coords.longitude);
-    })();
-  }, []);
+        let location = await Location.getCurrentPositionAsync({});
+        setUserLocation(location.coords);
+        fetchEvents(location.coords.latitude, location.coords.longitude);
+      })();
+    }, [])
+  );
 
   const fetchEvents = async (latitude, longitude) => {
     try {
