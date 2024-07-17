@@ -1,11 +1,22 @@
-import { View, Text, TextInput, SafeAreaView, TouchableOpacity, ScrollView, Image, Modal, Platform } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  SafeAreaView,
+  TouchableOpacity,
+  ScrollView,
+  Image,
+  Alert,
+  Platform,
+} from "react-native";
 import React, { useState, useEffect } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
-import DateTimePicker from "@react-native-community/datetimepicker";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 import Axios from "../utils/axios";
 
-const imageDataURL = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSviRMCGgqQ4I_iNG11jPQgvSK6SoMKvevcxA&s";
+const imageDataURL =
+  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSviRMCGgqQ4I_iNG11jPQgvSK6SoMKvevcxA&s";
 
 export default function EditProfile({ navigation }) {
   const [selectedImage, setSelectedImage] = useState(imageDataURL);
@@ -13,9 +24,8 @@ export default function EditProfile({ navigation }) {
   const [fullName, setFullName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [address, setAddress] = useState("");
-
-  const [openStartDatePicker, setOpenStartDatePicker] = useState(false);
-  const [selectedStartDate, setSelectedStartDate] = useState(new Date());
+  const [birthOfDate, setBirthOfDate] = useState("");
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
   const fetchData = async () => {
     try {
@@ -24,11 +34,7 @@ export default function EditProfile({ navigation }) {
       setFullName(response.data.fullName);
       setPhoneNumber(response.data.phoneNumber);
       setAddress(response.data.address);
-
-      // Assuming birthOfDate is in format "YYYY-MM-DD"
-      const birthOfDate = response.data.birthOfDate;
-      const [year, month, day] = birthOfDate.split("-");
-      setSelectedStartDate(new Date(year, month - 1, day)); // month is 0-indexed in Date
+      setBirthOfDate(response.data.birthOfDate);
     } catch (error) {
       console.error(error);
     }
@@ -38,24 +44,19 @@ export default function EditProfile({ navigation }) {
     fetchData();
     (async () => {
       const cameraStatus = await ImagePicker.requestCameraPermissionsAsync();
-      const mediaLibraryStatus = await ImagePicker.requestMediaLibraryPermissionsAsync();
-      if (cameraStatus.status !== "granted" || mediaLibraryStatus.status !== "granted") {
-        alert("Sorry, we need camera and media library permissions to make this work!");
+      const mediaLibraryStatus =
+        await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (
+        cameraStatus.status !== "granted" ||
+        mediaLibraryStatus.status !== "granted"
+      ) {
+        Alert.alert(
+          "Permissions required",
+          "Sorry, we need camera and media library permissions to make this work!"
+        );
       }
     })();
   }, []);
-
-  const handleChangeStartDate = (event, date) => {
-    if (date) {
-      setSelectedStartDate(date);
-    }
-    setOpenStartDatePicker(false);
-  };
-
-  const handleOnPressStartDate = () => {
-    // setOpenStartDatePicker(true);
-    console.log("kiw");
-  };
 
   const handleUploadImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -83,23 +84,45 @@ export default function EditProfile({ navigation }) {
   };
 
   const handleUpdateProfile = async () => {
-    console.log(fullName, email, address, phoneNumber);
+    try {
+      const response = await Axios.put("/user", {
+        email: email,
+        fullName: fullName,
+        phoneNumber: phoneNumber,
+        address: address,
+        birthOfDate: birthOfDate,
+      });
+      if (response.status === 200) {
+        Alert.alert(
+          "Success",
+          "Profile updated successfully!",
+          [
+            {
+              text: "OK",
+              onPress: () => navigation.navigate("ProfileHome"),
+            },
+          ],
+          { cancelable: false }
+        );
+      }
+    } catch (error) {
+      console.error(error);
+      Alert.alert("Error", "Failed to update profile. Please try again.");
+    }
   };
 
-  function renderDatePicker() {
-    return (
-      <Modal animationType="slide" transparent={true} visible={openStartDatePicker}>
-        <View style={styles.datePickerContainer}>
-          <DateTimePicker mode="date" value={selectedStartDate} maximumDate={new Date()} onChange={handleChangeStartDate} display={Platform.OS === "ios" ? "spinner" : "default"} />
-          {Platform.OS === "ios" && (
-            <TouchableOpacity onPress={() => setOpenStartDatePicker(false)} style={styles.datePickerCloseButton}>
-              <Text style={styles.datePickerCloseText}>Close</Text>
-            </TouchableOpacity>
-          )}
-        </View>
-      </Modal>
-    );
-  }
+  const showDatePicker = () => {
+    setDatePickerVisibility(true);
+  };
+
+  const hideDatePicker = () => {
+    setDatePickerVisibility(false);
+  };
+
+  const handleConfirm = (date) => {
+    setBirthOfDate(date.toISOString().split("T")[0]); // Format date to YYYY-MM-DD
+    hideDatePicker();
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -107,7 +130,10 @@ export default function EditProfile({ navigation }) {
       <ScrollView>
         <View style={styles.imageContainer}>
           <TouchableOpacity onPress={handleUploadImage}>
-            <Image source={{ uri: selectedImage }} style={styles.profileImage} />
+            <Image
+              source={{ uri: selectedImage }}
+              style={styles.profileImage}
+            />
             <View style={styles.cameraIconContainer}>
               <Ionicons name="camera" size={32} color="#fff" />
             </View>
@@ -124,45 +150,67 @@ export default function EditProfile({ navigation }) {
         <View style={styles.inputContainer}>
           <Text>Email</Text>
           <View style={styles.inputBox}>
-            <TextInput value={email} onChangeText={(value) => setEmail(value)} />
+            <TextInput
+              value={email}
+              onChangeText={(value) => setEmail(value)}
+            />
           </View>
         </View>
 
         <View style={styles.inputContainer}>
           <Text>Full Name</Text>
           <View style={styles.inputBox}>
-            <TextInput value={fullName} onChangeText={(value) => setFullName(value)} />
+            <TextInput
+              value={fullName}
+              onChangeText={(value) => setFullName(value)}
+            />
           </View>
         </View>
 
         <View style={styles.inputContainer}>
           <Text>Date of Birth</Text>
-          <TouchableOpacity onPress={handleOnPressStartDate} style={styles.inputBox}>
-            <Text>{selectedStartDate.toDateString()}</Text>
+          <TouchableOpacity onPress={showDatePicker}>
+            <View style={styles.inputBox}>
+              <Text>{birthOfDate || "Select Date"}</Text>
+            </View>
           </TouchableOpacity>
+          <DateTimePickerModal
+            isVisible={isDatePickerVisible}
+            mode="date"
+            onConfirm={handleConfirm}
+            onCancel={hideDatePicker}
+          />
         </View>
 
         <View style={styles.inputContainer}>
           <Text>Phone Number</Text>
           <View style={styles.inputBox}>
-            <TextInput value={phoneNumber} onChangeText={(value) => setPhoneNumber(value)} />
+            <TextInput
+              value={phoneNumber}
+              onChangeText={(value) => setPhoneNumber(value)}
+            />
           </View>
         </View>
 
         <View style={styles.inputContainer}>
           <Text>Address</Text>
           <View style={styles.inputBox}>
-            <TextInput value={address} onChangeText={(value) => setAddress(value)} />
+            <TextInput
+              value={address}
+              onChangeText={(value) => setAddress(value)}
+            />
           </View>
         </View>
 
         <View style={styles.saveButtonContainer}>
-          <TouchableOpacity onPress={handleUpdateProfile} style={styles.saveButton}>
+          <TouchableOpacity
+            onPress={handleUpdateProfile}
+            style={styles.saveButton}
+          >
             <Text style={styles.saveButtonText}>Save</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
-      {openStartDatePicker && renderDatePicker()}
     </SafeAreaView>
   );
 }
@@ -245,20 +293,6 @@ const styles = {
   saveButtonText: {
     color: "#fff",
     fontSize: 18,
-    fontWeight: "bold",
-  },
-  datePickerContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 22,
-    backgroundColor: "rgba(0,0,0,0.5)",
-  },
-  datePickerCloseButton: {
-    marginTop: 20,
-  },
-  datePickerCloseText: {
-    fontSize: 16,
     fontWeight: "bold",
   },
 };
