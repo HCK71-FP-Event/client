@@ -26,6 +26,7 @@ const Event = ({ route }) => {
   const fetchEventDetail = async () => {
     try {
       const response = await Axios.get(`/allEvent/${id}`);
+      console.log(response.data.user);
       setUser(response.data.user);
       setEvent(response.data.eventById);
     } catch (err) {

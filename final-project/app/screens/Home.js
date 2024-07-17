@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import {
   FlatList,
   StatusBar,
@@ -9,6 +9,7 @@ import {
   Text,
   ScrollView,
 } from "react-native";
+import { useFocusEffect } from "@react-navigation/native";
 import Card from "../components/Card";
 import Axios from "../utils/axios";
 
@@ -18,14 +19,18 @@ export default function Home({ navigation }) {
   const [filter, setFilter] = useState("");
   const [categories, setCategories] = useState([]);
 
-  useEffect(() => {
-    fetchData();
-    fetchCategoryData();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      fetchData();
+      fetchCategoryData();
+    }, [])
+  );
 
-  useEffect(() => {
-    fetchData(search, filter);
-  }, [filter]);
+  useFocusEffect(
+    useCallback(() => {
+      fetchData(search, filter);
+    }, [filter, search])
+  );
 
   const fetchCategoryData = async () => {
     try {
@@ -41,6 +46,7 @@ export default function Home({ navigation }) {
       const response = await Axios.get(
         `/allEvent?search=${search}&filter=${filter}`
       );
+      console.log(response.data.allEvent);
       setData(response.data.allEvent);
     } catch (err) {
       console.error(err);
