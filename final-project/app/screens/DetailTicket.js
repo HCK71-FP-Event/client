@@ -1,18 +1,38 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { View, Text, StyleSheet, SafeAreaView, ScrollView } from "react-native";
 import Axios from "../utils/axios";
+import axios from "axios";
+import { useFocusEffect } from "@react-navigation/native";
 
 export default function DetailTicket({ route }) {
   const { id } = route.params;
   const [data, setData] = useState("");
+  const [geo, setGeo] = useState("");
+
   const fetchData = async () => {
     const response = await Axios.get(`/transactions/${id}`);
     setData(response.data);
   };
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+  const fetchDataGeo = async () => {
+    try {
+      const response = await axios.get(
+        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${data.lat},${data.long}&key=${process.env.EXPO_PUBLIC_API_GEOCODING}`
+      );
+      if (response?.data?.results[0]?.formatted_address) {
+        setGeo(response.data.results[0].formatted_address || "");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchData();
+      fetchDataGeo();
+    }, [])
+  );
 
   return (
     <SafeAreaView style={styles.container}>
@@ -49,7 +69,7 @@ export default function DetailTicket({ route }) {
           </View>
           <View style={styles.row}>
             <Text style={styles.label}>Payment Date</Text>
-            <Text style={styles.value}>: {data.paymentDate?.slice(0,10)}</Text>
+            <Text style={styles.value}>: {data.paymentDate?.slice(0, 10)}</Text>
           </View>
           <View style={styles.row}>
             <Text style={styles.label}>Payment Status</Text>
@@ -66,9 +86,9 @@ export default function DetailTicket({ route }) {
           </View>
 
           <View style={styles.tableRow}>
-            <Text style={styles.tableCell}>{data.eventDate?.slice(0,10)}</Text>
+            <Text style={styles.tableCell}>{data.eventDate?.slice(0, 10)}</Text>
             <Text style={styles.tableCell}>{data.event}</Text>
-            <Text style={styles.tableCell}>{data.long}</Text>
+            <Text style={styles.tableCell}>{geo}</Text>
           </View>
         </View>
 
@@ -80,7 +100,9 @@ export default function DetailTicket({ route }) {
           </View>
           <View style={styles.tableRow}>
             <Text style={styles.tableCell}>{data.ticketQuantity}</Text>
-            <Text style={styles.tableCell}>{data.isFree ? "FREE" : `Rp. ${data.grandTotal}` } </Text>
+            <Text style={styles.tableCell}>
+              {data.isFree ? "FREE" : `Rp. ${data.grandTotal}`}{" "}
+            </Text>
           </View>
         </View>
       </ScrollView>

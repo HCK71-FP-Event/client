@@ -45,6 +45,7 @@ export default function Ticket({ navigation }) {
   );
 }
 
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
