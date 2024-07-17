@@ -1,9 +1,5 @@
 import React from "react";
-import {
-  View,
-  Platform,
-  StyleSheet,
-} from "react-native";
+import { View, Platform, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -16,7 +12,7 @@ import EventMap from "../screens/EventMap";
 import CreateEvent from "../screens/CreateEvent";
 
 import PaymentForm from "../screens/PaymentForm";
-
+import EditProfile from "../screens/EditProfile";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -39,13 +35,18 @@ const screenOptions = {
 function EventStackNavigator() {
   return (
     <Stack.Navigator>
-      <Stack.Screen
-        name="EventList"
-        component={Home}
-        options={{ headerShown: false }}
-      />
+      <Stack.Screen name="EventList" component={Home} options={{ headerShown: false }} />
       <Stack.Screen name="EventDetail" component={Event} />
       <Stack.Screen name="PaymentForm" component={PaymentForm} />
+    </Stack.Navigator>
+  );
+}
+
+function EventProfileNavigator() {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen name="ProfileHome" component={Profile} options={{ headerShown: false }} />
+      <Stack.Screen name="EditProfile" component={EditProfile} />
     </Stack.Navigator>
   );
 }
@@ -58,26 +59,14 @@ export default function BottomTabNav() {
           name="Home"
           component={EventStackNavigator}
           options={{
-            tabBarIcon: ({ focused }) => (
-              <Ionicons
-                name="home"
-                size={24}
-                color={focused ? "#F0FFFF" : "#000000"}
-              />
-            ),
+            tabBarIcon: ({ focused }) => <Ionicons name="home" size={24} color={focused ? "#F0FFFF" : "#000000"} />,
           }}
         />
         <Tab.Screen
           name="Tickets"
           component={Tickets}
           options={{
-            tabBarIcon: ({ focused }) => (
-              <Ionicons
-                name="ticket"
-                size={24}
-                color={focused ? "#F0FFFF" : "#000000"}
-              />
-            ),
+            tabBarIcon: ({ focused }) => <Ionicons name="ticket" size={24} color={focused ? "#F0FFFF" : "#000000"} />,
           }}
         />
         <Tab.Screen
@@ -107,26 +96,14 @@ export default function BottomTabNav() {
           name="Events"
           component={CreateEvent} // Use the stack navigator here
           options={{
-            tabBarIcon: ({ focused }) => (
-              <Ionicons
-                name="add-circle"
-                size={24}
-                color={focused ? "#F0FFFF" : "#000000"}
-              />
-            ),
+            tabBarIcon: ({ focused }) => <Ionicons name="add-circle" size={24} color={focused ? "#F0FFFF" : "#000000"} />,
           }}
         />
         <Tab.Screen
           name="Profile"
-          component={Profile}
+          component={EventProfileNavigator}
           options={{
-            tabBarIcon: ({ focused }) => (
-              <Ionicons
-                name="person"
-                size={24}
-                color={focused ? "#F0FFFF" : "#000000"}
-              />
-            ),
+            tabBarIcon: ({ focused }) => <Ionicons name="person" size={24} color={focused ? "#F0FFFF" : "#000000"} />,
           }}
         />
       </Tab.Navigator>
