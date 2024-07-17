@@ -5,6 +5,7 @@ import * as ImagePicker from "expo-image-picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import Axios from "../utils/axios";
 
+
 const imageDataURL = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSviRMCGgqQ4I_iNG11jPQgvSK6SoMKvevcxA&s";
 
 export default function EditProfile({ navigation }) {
@@ -54,7 +55,6 @@ export default function EditProfile({ navigation }) {
 
   const handleOnPressStartDate = () => {
     // setOpenStartDatePicker(true);
-    console.log("kiw");
   };
 
   const handleUploadImage = async () => {
