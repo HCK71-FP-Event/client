@@ -42,7 +42,6 @@ export default function PaymentForm({ route, navigation }) {
         setModalMessage("Your payment has been initiated.");
         setModalVisible(true);
       }
-      console.log("masuk line 37");
       navigation.navigate("Home");
     } catch (error) {
       setModalTitle("Error");

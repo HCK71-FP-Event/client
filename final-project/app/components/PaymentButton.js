@@ -20,7 +20,6 @@ const PaymentButton = ({ eventId, quantity }) => {
         }
       );
       const data = await response.json();
-      console.log(data);
       setSnapToken(data.transactionToken);
       setModalVisible(true);
     } catch (error) {

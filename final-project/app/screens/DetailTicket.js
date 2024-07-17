@@ -5,9 +5,7 @@ import Axios from "../utils/axios";
 export default function DetailTicket({ route }) {
   const { id } = route.params;
   const [data, setData] = useState("");
-  console.log(id);
   const fetchData = async () => {
-    console.log("sebelum");
     const response = await Axios.get(`/transactions/${id}`);
     setData(response.data);
   };
@@ -16,7 +14,6 @@ export default function DetailTicket({ route }) {
     fetchData();
   }, []);
 
-  console.log(data, "dataaa");
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollViewContainer}>
