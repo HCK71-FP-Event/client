@@ -1,4 +1,4 @@
-import { View, Text, TextInput, SafeAreaView, TouchableOpacity, ScrollView, Image, Modal } from "react-native";
+import { View, Text, TextInput, SafeAreaView, TouchableOpacity, ScrollView, Image, Modal, Platform } from "react-native";
 import React, { useState, useEffect } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
@@ -37,21 +37,24 @@ export default function EditProfile({ navigation }) {
   useEffect(() => {
     fetchData();
     (async () => {
-      const { status } = await ImagePicker.requestCameraPermissionsAsync();
-      if (status !== "granted") {
+      const cameraStatus = await ImagePicker.requestCameraPermissionsAsync();
+      const mediaLibraryStatus = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (cameraStatus.status !== "granted" || mediaLibraryStatus.status !== "granted") {
         alert("Sorry, we need camera and media library permissions to make this work!");
       }
     })();
   }, []);
 
   const handleChangeStartDate = (event, date) => {
-    const selectedDate = date || selectedStartDate;
+    if (date) {
+      setSelectedStartDate(date);
+    }
     setOpenStartDatePicker(false);
-    setSelectedStartDate(selectedDate);
   };
 
   const handleOnPressStartDate = () => {
-    setOpenStartDatePicker(!openStartDatePicker);
+    // setOpenStartDatePicker(true);
+    console.log("kiw");
   };
 
   const handleUploadImage = async () => {
@@ -87,10 +90,12 @@ export default function EditProfile({ navigation }) {
     return (
       <Modal animationType="slide" transparent={true} visible={openStartDatePicker}>
         <View style={styles.datePickerContainer}>
-          <DateTimePicker mode="date" value={selectedStartDate} maximumDate={new Date()} onChange={handleChangeStartDate} />
-          <TouchableOpacity onPress={handleOnPressStartDate} style={styles.datePickerCloseButton}>
-            <Text style={styles.datePickerCloseText}>Close</Text>
-          </TouchableOpacity>
+          <DateTimePicker mode="date" value={selectedStartDate} maximumDate={new Date()} onChange={handleChangeStartDate} display={Platform.OS === "ios" ? "spinner" : "default"} />
+          {Platform.OS === "ios" && (
+            <TouchableOpacity onPress={() => setOpenStartDatePicker(false)} style={styles.datePickerCloseButton}>
+              <Text style={styles.datePickerCloseText}>Close</Text>
+            </TouchableOpacity>
+          )}
         </View>
       </Modal>
     );
@@ -243,21 +248,11 @@ const styles = {
     fontWeight: "bold",
   },
   datePickerContainer: {
-    margin: 20,
-    backgroundColor: "#fff",
-    alignItems: "center",
+    flex: 1,
     justifyContent: "center",
-    borderRadius: 20,
-    padding: 35,
-    width: "90%",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
+    alignItems: "center",
+    marginTop: 22,
+    backgroundColor: "rgba(0,0,0,0.5)",
   },
   datePickerCloseButton: {
     marginTop: 20,
