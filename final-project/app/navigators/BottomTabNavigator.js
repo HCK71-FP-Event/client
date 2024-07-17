@@ -13,6 +13,8 @@ import CreateEvent from "../screens/CreateEvent";
 
 import PaymentForm from "../screens/PaymentForm";
 import EditProfile from "../screens/EditProfile";
+import Ticket from "../screens/Tickets";
+import DetailTicket from '../screens/DetailTicket'
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -51,6 +53,15 @@ function EventProfileNavigator() {
   );
 }
 
+function EventTicketsNavigator() {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen name="TicketHome" component={Ticket} options={{ headerShown: false }} />
+      <Stack.Screen name="TicketDetail" component={DetailTicket} />
+    </Stack.Navigator>
+  );
+}
+
 export default function BottomTabNav() {
   return (
     <View style={{ flex: 1 }}>
@@ -64,7 +75,7 @@ export default function BottomTabNav() {
         />
         <Tab.Screen
           name="Tickets"
-          component={Tickets}
+          component={EventTicketsNavigator}
           options={{
             tabBarIcon: ({ focused }) => <Ionicons name="ticket" size={24} color={focused ? "#F0FFFF" : "#000000"} />,
           }}

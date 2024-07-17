@@ -1,16 +1,32 @@
-import React from "react";
-import { View, Text, StyleSheet, SafeAreaView, ScrollView } from "react-native";
-import Axios from '../utils/axios'
+import React, { useEffect, useState, useCallback } from "react";
+import { View, Text, StyleSheet, SafeAreaView, ScrollView, FlatList } from "react-native";
+import Axios from "../utils/axios";
+import TicketCard from "../components/TicketCard";
+import { useFocusEffect } from "@react-navigation/native";
 
-export default function Ticket() {
+
+export default function Ticket({ navigation }) {
+  const [data, setData] = useState([]);
   const fetchData = async () => {
     const response = await Axios.get(`/transactions`);
-  }
+    setData(response.data);
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+    fetchData();
+  }, []));
   return (
     <SafeAreaView style={styles.container}>
+      <Text>My Tickets</Text>
       <ScrollView contentContainerStyle={styles.scrollViewContainer}>
         <View>
-          <Text>List Ticket</Text>
+          <FlatList
+            data={data}
+            renderItem={({ item }) => <TicketCard data={item} onPress={() => navigation.navigate("TicketDetail", { id: item.id })} />}
+            keyExtractor={(item) => item.id.toString()}
+            contentContainerStyle={styles.listContent}
+          />
         </View>
       </ScrollView>
     </SafeAreaView>
