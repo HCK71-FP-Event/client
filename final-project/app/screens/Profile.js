@@ -1,12 +1,22 @@
 import React from "react";
-import { View, Text, Image, TouchableOpacity, SafeAreaView, StyleSheet, ScrollView, Dimensions } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  SafeAreaView,
+  StyleSheet,
+  ScrollView,
+  Dimensions,
+} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { StatusBar } from "expo-status-bar";
-import { useEffect, useState, useContext } from "react";
+import { useCallback, useState, useContext } from "react";
 import Axios from "../utils/axios";
 import Svg, { Path } from "react-native-svg";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AuthContext } from "../context/AuthContext";
+import { useFocusEffect } from "@react-navigation/native";
 
 const { height } = Dimensions.get("window");
 
@@ -32,9 +42,11 @@ export default function Profile({ navigation }) {
     setUserData(response.data);
   };
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      fetchData();
+    }, [])
+  );
 
   return (
     <SafeAreaView style={styles.container}>
@@ -42,12 +54,17 @@ export default function Profile({ navigation }) {
       <View style={styles.headerContainer}>
         <Image
           source={{
-            uri: userData.coverImage || "https://i.pinimg.com/474x/cd/92/37/cd92379f92f30f07b989a88996c44408.jpg",
+            uri:
+              userData.coverImage ||
+              "https://i.pinimg.com/474x/cd/92/37/cd92379f92f30f07b989a88996c44408.jpg",
           }}
           resizeMode="cover"
           style={styles.headerImage}
         />
-        <TouchableOpacity onPress={navigateToEditProfile} style={styles.editButton}>
+        <TouchableOpacity
+          onPress={navigateToEditProfile}
+          style={styles.editButton}
+        >
           <View style={styles.editIconContainer}>
             <Ionicons name="pencil" size={20} color="#333" />
           </View>
@@ -55,7 +72,9 @@ export default function Profile({ navigation }) {
         </TouchableOpacity>
         <Image
           source={{
-            uri: userData.profileImage || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSviRMCGgqQ4I_iNG11jPQgvSK6SoMKvevcxA&s",
+            uri:
+              userData.profileImage ||
+              "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSviRMCGgqQ4I_iNG11jPQgvSK6SoMKvevcxA&s",
           }}
           resizeMode="cover"
           style={styles.profileImage}
@@ -66,17 +85,30 @@ export default function Profile({ navigation }) {
       </View>
       <ScrollView contentContainerStyle={styles.profileInfoContainer}>
         <View style={styles.detailsCard}>
-          {userData.address && <ProfileDetail icon="location" text={userData.address} />}
-          {userData.birthOfDate && <ProfileDetail icon="calendar" text={userData.birthOfDate} />}
-          {userData.phoneNumber && <ProfileDetail icon="call" text={userData.phoneNumber} />}
-          {userData.email && <ProfileDetail icon="mail" text={userData.email} />}
+          {userData.address && (
+            <ProfileDetail icon="location" text={userData.address} />
+          )}
+          {userData.birthOfDate && (
+            <ProfileDetail icon="calendar" text={userData.birthOfDate} />
+          )}
+          {userData.phoneNumber && (
+            <ProfileDetail icon="call" text={userData.phoneNumber} />
+          )}
+          {userData.email && (
+            <ProfileDetail icon="mail" text={userData.email} />
+          )}
         </View>
         <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
           <Ionicons name="log-out" size={24} color="#fff" />
           <Text style={styles.logoutText}>Logout</Text>
         </TouchableOpacity>
       </ScrollView>
-      <Svg height="15%" width="100%" viewBox="0 0 1440 320" style={styles.bottomWave}>
+      <Svg
+        height="15%"
+        width="100%"
+        viewBox="0 0 1440 320"
+        style={styles.bottomWave}
+      >
         <Path fill="#6a51ae" d="M0,224L1440,64L1440,320L0,320Z" />
       </Svg>
     </SafeAreaView>
