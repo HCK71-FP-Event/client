@@ -4,8 +4,6 @@ import { ActivityIndicator, View } from "react-native";
 import AuthStack from "./AuthStack.js";
 import BottomTabNav from "./BottomTabNavigator.js";
 import { AuthContext } from "../context/AuthContext.js";
-import DetailEventScreen from "../screens/DetailEventScreen";
-import PaymentForm from "../screens/PaymentForm";
 
 const Stack = createStackNavigator();
 
