@@ -46,7 +46,6 @@ export default function Home({ navigation }) {
       const response = await Axios.get(
         `/allEvent?search=${search}&filter=${filter}`
       );
-      console.log(response.data.allEvent);
       setData(response.data.allEvent);
     } catch (err) {
       console.error(err);

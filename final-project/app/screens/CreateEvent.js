@@ -41,18 +41,7 @@ const CreateEvent = ({ navigation }) => {
   const handleSubmit = async () => {
     try {
       // Handle submission logic here, e.g., sending data to server
-      console.log("Submitting event:", {
-        eventName,
-        imageUrl,
-        longitude,
-        latitude,
-        category,
-        eventDate: eventDate.toISOString(),
-        description,
-        quantity,
-      });
 
-      console.log("sebelum await");
 
       //   await Axios({
       //     method: "POST",
