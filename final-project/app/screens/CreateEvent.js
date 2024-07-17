@@ -26,7 +26,6 @@ const CreateEvent = ({ navigation }) => {
   const [description, setDescription] = useState("");
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [categories, setCategories] = useState([]);
-  const [events, setEvents] = useState([]);
 
   const handleDateChange = (event, selectedDate) => {
     const currentDate = selectedDate || eventDate;
@@ -37,11 +36,6 @@ const CreateEvent = ({ navigation }) => {
   const fetchCategoryData = async () => {
     const response = await Axios.get("/categories");
     setCategories(response.data);
-  };
-
-  const fetchData = async () => {
-    const response = await Axios.get("/allEvent");
-    setEvents(response.data);
   };
 
   const handleSubmit = async () => {
@@ -93,7 +87,6 @@ const CreateEvent = ({ navigation }) => {
     }
   };
   useEffect(() => {
-    fetchData();
     fetchCategoryData();
   }, []);
 
