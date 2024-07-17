@@ -1,5 +1,12 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { View, Text, StyleSheet, SafeAreaView, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  SafeAreaView,
+  ScrollView,
+  processColor,
+} from "react-native";
 import Axios from "../utils/axios";
 import axios from "axios";
 import { useFocusEffect } from "@react-navigation/native";
@@ -17,7 +24,7 @@ export default function DetailTicket({ route }) {
   const fetchDataGeo = async () => {
     try {
       const response = await axios.get(
-        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${data.lat},${data.long}&key=AIzaSyB-GZPCe4mwnWllPDF9O-mvmyW_qYUiavI`
+        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${data.lat},${data.long}&key=${process.env.EXPO_PUBLIC_API_GEOCODING}`
       );
       if (response?.data?.results[0]?.formatted_address) {
         setGeo(response.data.results[0].formatted_address);
@@ -31,7 +38,7 @@ export default function DetailTicket({ route }) {
     useCallback(() => {
       fetchData();
       fetchDataGeo();
-    }, [])
+    }, [data])
   );
 
   return (
