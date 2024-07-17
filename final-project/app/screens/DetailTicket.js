@@ -1,7 +1,22 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, SafeAreaView, ScrollView } from "react-native";
+import Axios from "../utils/axios";
 
-export default function DetailTicket() {
+export default function DetailTicket({ route }) {
+  const { id } = route.params;
+  const [data, setData] = useState("");
+  console.log(id);
+  const fetchData = async () => {
+    console.log("sebelum");
+    const response = await Axios.get(`/transactions/${id}`);
+    setData(response.data);
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  console.log(data, "dataaa");
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollViewContainer}>
@@ -13,7 +28,7 @@ export default function DetailTicket() {
 
         <View style={styles.bookingCodeContainer}>
           <Text style={styles.bookingCodeLabel}>Kode Pemesanan</Text>
-          <Text style={styles.bookingCode}>Order id</Text>
+          <Text style={styles.bookingCode}>{data.OrderId}</Text>
           {/* <View style={styles.barcode} /> */}
         </View>
 
@@ -21,27 +36,27 @@ export default function DetailTicket() {
           <Text style={styles.sectionHeader}>BIODATA</Text>
           <View style={styles.row}>
             <Text style={styles.label}>Name</Text>
-            <Text style={styles.value}>: Fiki</Text>
+            <Text style={styles.value}>: {data.name}</Text>
           </View>
           <View style={styles.row}>
             <Text style={styles.label}>Address</Text>
-            <Text style={styles.value}>: Jalan Rawa</Text>
+            <Text style={styles.value}>: {data.address}</Text>
           </View>
           <View style={styles.row}>
             <Text style={styles.label}>Telephone</Text>
-            <Text style={styles.value}>: 0852</Text>
+            <Text style={styles.value}>: {data.phoneNumber}</Text>
           </View>
           <View style={styles.row}>
             <Text style={styles.label}>Email</Text>
-            <Text style={styles.value}>: email@gmail.com</Text>
+            <Text style={styles.value}>: {data.email}</Text>
           </View>
           <View style={styles.row}>
             <Text style={styles.label}>Payment Date</Text>
-            <Text style={styles.value}>: 08 MAY 2019, 12:51:16</Text>
+            <Text style={styles.value}>: {data.paymentDate?.slice(0,10)}</Text>
           </View>
           <View style={styles.row}>
             <Text style={styles.label}>Payment Status</Text>
-            <Text style={styles.value}>: PAID</Text>
+            <Text style={styles.value}>: {data.status}</Text>
           </View>
         </View>
 
@@ -54,9 +69,9 @@ export default function DetailTicket() {
           </View>
 
           <View style={styles.tableRow}>
-            <Text style={styles.tableCell}>06 JUN 2019</Text>
-            <Text style={styles.tableCell}>Nama Event</Text>
-            <Text style={styles.tableCell}>Lokasi Event</Text>
+            <Text style={styles.tableCell}>{data.eventDate?.slice(0,10)}</Text>
+            <Text style={styles.tableCell}>{data.event}</Text>
+            <Text style={styles.tableCell}>{data.long}</Text>
           </View>
         </View>
 
@@ -67,8 +82,8 @@ export default function DetailTicket() {
             <Text style={styles.tableHeader}>GRAND TOTAL</Text>
           </View>
           <View style={styles.tableRow}>
-            <Text style={styles.tableCell}>1</Text>
-            <Text style={styles.tableCell}>Rp. 100000</Text>
+            <Text style={styles.tableCell}>{data.ticketQuantity}</Text>
+            <Text style={styles.tableCell}>{data.isFree ? "FREE" : `Rp. ${data.grandTotal}` } </Text>
           </View>
         </View>
       </ScrollView>
@@ -110,7 +125,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   bookingCode: {
-    fontSize: 28,
+    fontSize: 15,
     fontWeight: "bold",
     color: "#F57C00",
   },

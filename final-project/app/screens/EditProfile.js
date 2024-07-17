@@ -18,6 +18,7 @@ import Axios from "../utils/axios";
 const imageDataURL =
   "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSviRMCGgqQ4I_iNG11jPQgvSK6SoMKvevcxA&s";
 
+
 export default function EditProfile({ navigation }) {
   const [selectedImage, setSelectedImage] = useState(imageDataURL);
   const [email, setEmail] = useState("");
@@ -57,6 +58,14 @@ export default function EditProfile({ navigation }) {
       }
     })();
   }, []);
+
+
+  const handleChangeStartDate = (event, date) => {
+    if (date) {
+      setSelectedStartDate(date);
+    }
+    setOpenStartDatePicker(false);
+  };
 
   const handleUploadImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
