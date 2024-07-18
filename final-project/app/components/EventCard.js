@@ -56,23 +56,22 @@ const EventCard = ({ event, user, style, onToggleMap }) => {
               <View style={styles.categoryContainer}>
                 <Text style={styles.category}>{event.Category.name}</Text>
               </View>
-              <Text style={styles.date}>
-                {event.eventDate
-                  ? new Date(event.eventDate).toLocaleDateString()
-                  : "Unknown Date"}
-              </Text>
+              <Text style={styles.date}>{event.eventDate ? new Date(event.eventDate).toLocaleDateString() : "Unknown Date"}</Text>
               <Text style={styles.description}>{event.description}</Text>
               <Text style={styles.quantity}>Tickets Left: {event.quantity}</Text>
               <View style={styles.buttonContainer}>
                 <TouchableOpacity style={styles.mapToggle} onPress={onToggleMap}>
                   <Text style={styles.mapToggleText}>Show Map</Text>
                 </TouchableOpacity>
-                <TouchableOpacity
-                  style={styles.buyButton}
-                  onPress={handleBuyTicket}
-                >
-                  <Text style={styles.buyButtonText}>Buy Ticket</Text>
-                </TouchableOpacity>
+                {new Date(event.eventDate) > new Date() ? (
+                  <TouchableOpacity style={styles.buyButton} onPress={handleBuyTicket}>
+                    <Text style={styles.buyButtonText}>Buy Ticket</Text>
+                  </TouchableOpacity>
+                ) : (
+                  <TouchableOpacity style={styles.disableBuyButton} onPress={handleBuyTicket} disabled={true}>
+                    <Text style={styles.buyButtonText}>Buy Ticket</Text>
+                  </TouchableOpacity>
+                )}
               </View>
             </View>
           </View>
@@ -169,6 +168,13 @@ const styles = StyleSheet.create({
   },
   buyButton: {
     backgroundColor: "#28a745",
+    paddingVertical: 8,
+    paddingHorizontal: 15,
+    borderRadius: 15,
+    elevation: 3,
+  },
+  disableBuyButton: {
+    backgroundColor: "gray",
     paddingVertical: 8,
     paddingHorizontal: 15,
     borderRadius: 15,
