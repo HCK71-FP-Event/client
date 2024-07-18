@@ -7,7 +7,6 @@ import {
   ScrollView,
   Image,
   Alert,
-  Platform,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { Ionicons } from "@expo/vector-icons";
@@ -25,6 +24,7 @@ export default function EditProfile({ navigation }) {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [address, setAddress] = useState("");
   const [birthOfDate, setBirthOfDate] = useState("");
+  const [image, setImage] = useState("");
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
   const fetchData = async () => {
@@ -35,6 +35,7 @@ export default function EditProfile({ navigation }) {
       setPhoneNumber(response.data.phoneNumber);
       setAddress(response.data.address);
       setBirthOfDate(response.data.birthOfDate);
+      setImage(response.data.avatar);
     } catch (error) {
       console.error(error);
     }
@@ -137,10 +138,7 @@ export default function EditProfile({ navigation }) {
       <ScrollView>
         <View style={styles.imageContainer}>
           <TouchableOpacity onPress={handleUploadImage}>
-            <Image
-              source={{ uri: selectedImage }}
-              style={styles.profileImage}
-            />
+            <Image source={{ uri: image }} style={styles.profileImage} />
             <View style={styles.cameraIconContainer}>
               <Ionicons name="camera" size={32} color="#fff" />
             </View>

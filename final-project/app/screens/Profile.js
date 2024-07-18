@@ -73,7 +73,7 @@ export default function Profile({ navigation }) {
         <Image
           source={{
             uri:
-              userData.profileImage ||
+              userData.avatar ||
               "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSviRMCGgqQ4I_iNG11jPQgvSK6SoMKvevcxA&s",
           }}
           resizeMode="cover"
