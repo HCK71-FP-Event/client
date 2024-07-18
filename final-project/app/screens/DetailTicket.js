@@ -1,12 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  SafeAreaView,
-  ScrollView,
-  processColor,
-} from "react-native";
+import { View, Text, StyleSheet, SafeAreaView, ScrollView, processColor } from "react-native";
 import Axios from "../utils/axios";
 import axios from "axios";
 import { useFocusEffect } from "@react-navigation/native";
@@ -23,12 +16,13 @@ export default function DetailTicket({ route }) {
 
   const fetchDataGeo = async () => {
     try {
-      const response = await axios.get(
-        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${data.lat},${data.long}&key=${process.env.EXPO_PUBLIC_API_GEOCODING}`
-      );
+      console.log("sebelom fetch");
+      const response = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${data.lat},${data.long}&key=${process.env.EXPO_PUBLIC_API_GEOCODING}`);
       if (response?.data?.results[0]?.formatted_address) {
         setGeo(response.data.results[0].formatted_address);
       }
+      // console.log("sesudah");
+      console.log(response, "response");
     } catch (error) {
       console.log(error);
     }
@@ -37,6 +31,10 @@ export default function DetailTicket({ route }) {
   useFocusEffect(
     useCallback(() => {
       fetchData();
+    }, [])
+  );
+  useFocusEffect(
+    useCallback(() => {
       fetchDataGeo();
     }, [data])
   );
@@ -107,11 +105,7 @@ export default function DetailTicket({ route }) {
           </View>
           <View style={styles.tableRow}>
             <Text style={styles.tableCell}>{data.ticketQuantity}</Text>
-            <Text style={styles.tableCell}>
-              {data.isFree
-                ? "FREE"
-                : `Rp. ${data?.grandTotal?.toLocaleString("id-ID")}`}{" "}
-            </Text>
+            <Text style={styles.tableCell}>{data.isFree ? "FREE" : `Rp. ${data?.grandTotal?.toLocaleString("id-ID")}`} </Text>
           </View>
         </View>
       </ScrollView>

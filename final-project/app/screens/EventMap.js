@@ -1,12 +1,5 @@
 import React, { useCallback, useState } from "react";
-import {
-  View,
-  StatusBar,
-  FlatList,
-  StyleSheet,
-  Text,
-  ActivityIndicator,
-} from "react-native";
+import { View, StatusBar, FlatList, StyleSheet, Text, ActivityIndicator } from "react-native";
 import * as Location from "expo-location";
 import Axios from "../utils/axios";
 import Map from "../components/Map";
@@ -38,9 +31,7 @@ export default function EventMap({ navigation }) {
 
   const fetchEvents = async (latitude, longitude) => {
     try {
-      const { data } = await Axios.get(
-        `/event?lat=${latitude}&long=${longitude}`
-      );
+      const { data } = await Axios.get(`/event?lat=${latitude}&long=${longitude}`);
       setData(data);
     } catch (err) {
       console.error(err);
@@ -67,19 +58,7 @@ export default function EventMap({ navigation }) {
         {data.length === 0 ? (
           <Text style={styles.noEventsText}>No events nearby</Text>
         ) : (
-          <FlatList
-            data={data}
-            renderItem={({ item }) => (
-              <Card
-                data={item}
-                onPress={() =>
-                  navigation.navigate("EventDetail", { id: item.id })
-                }
-              />
-            )}
-            keyExtractor={(item) => item.id.toString()}
-            contentContainerStyle={styles.listContent}
-          />
+          <FlatList data={data} renderItem={({ item }) => <Card data={item} onPress={() => navigation.navigate("EventDetail", { id: item.id })} />} keyExtractor={(item) => item.id.toString()} contentContainerStyle={styles.listContent} />
         )}
       </View>
     </View>
